@@ -1,12 +1,18 @@
 package leavemanager.example.com.leavemanager.activity;
 
 import android.app.Activity;
+import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.os.Bundle;
+import android.support.v4.content.ContextCompat;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 
 import leavemanager.example.com.leavemanager.R;
+import leavemanager.example.com.leavemanager.fragment.LeaveFragment;
+import leavemanager.example.com.leavemanager.fragment.MineFragment;
+import leavemanager.example.com.leavemanager.fragment.PermitFragment;
+import leavemanager.example.com.leavemanager.fragment.ReportbackFragment;
 
 public class MainActivity extends Activity {
     private RadioGroup mRadioGroup = null;
@@ -14,7 +20,11 @@ public class MainActivity extends Activity {
     private RadioButton mRadioPermit = null;
     private RadioButton mRadioReportback = null;
     private RadioButton mRadioMine = null;
-
+    private LeaveFragment mLeaveFragment;
+    private PermitFragment mPermitFragment;
+    private ReportbackFragment mReportbackFragment;
+    private MineFragment mMineFragment;
+    private FragmentManager fragmentManager;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -25,48 +35,15 @@ public class MainActivity extends Activity {
         mRadioReportback = findViewById(R.id.reportback_rb);
         mRadioMine = findViewById(R.id.mine_rb);
         mRadioGroup.setOnCheckedChangeListener(new MyRadioGroupListener());
-    }
+        fragmentManager = getFragmentManager();
+        FragmentTransaction transaction = fragmentManager.beginTransaction();
+        mLeaveFragment = new LeaveFragment();
+        transaction.add(R.id.main_fragment_container,mLeaveFragment);
+        transaction.commit();
 
-    private void setTabState() {
-        setHomeState();
-        setLocationState();
-        setLikeState();
-        setMeState();
-    }
+        mRadioLeave.setSelected(true);
+        mRadioLeave.setBackgroundColor(ContextCompat.getColor(this, R.color.colorPrimary));
 
-    /**
-     * set tab home state
-     */
-    private void setHomeState() {
-        if (mRadioLeave.isChecked()) {
-            mRadioLeave.setTextColor(ContextCompat.getColor(getActivity(), R.color.colorPrimary));
-        } else {
-            mRadioLeave.setTextColor(ContextCompat.getColor(getActivity(), R.color.black));
-        }
-    }
-
-    private void setLocationState() {
-        if (mRadioPermit.isChecked()) {
-            mRadioPermit.setTextColor(ContextCompat.getColor(getActivity(), R.color.colorPrimary));
-        } else {
-            mRadioPermit.setTextColor(ContextCompat.getColor(getActivity(), R.color.black));
-        }
-    }
-
-    private void setLikeState() {
-        if (mRadioReportback.isChecked()) {
-            mRadioReportback.setTextColor(ContextCompat.getColor(getActivity(), R.color.colorPrimary));
-        } else {
-            mRadioReportback.setTextColor(ContextCompat.getColor(getActivity(), R.color.black));
-        }
-    }
-
-    private void setMeState() {
-        if (mRadioMine.isChecked()) {
-            mRadioMine.setTextColor(ContextCompat.getColor(getActivity(), R.color.colorPrimary));
-        } else {
-            mRadioMine.setTextColor(ContextCompat.getColor(getActivity(), R.color.black));
-        }
     }
     class MyRadioGroupListener implements RadioGroup.OnCheckedChangeListener {
 
@@ -75,28 +52,28 @@ public class MainActivity extends Activity {
             FragmentTransaction transaction = getFragmentManager().beginTransaction();
             switch (checkedId) {
                 case R.id.leave_rb:
-                    if (mHomeFragment == null) {
-                        mHomeFragment = HomeFragment.newInstance(getString(R.string.item_home));
+                    if (mLeaveFragment == null) {
+                        mLeaveFragment = LeaveFragment.newInstance(getString(R.string.leave));
                     }
-                    transaction.replace(R.id.sub_content, mHomeFragment);
+                    transaction.replace(R.id.main_fragment_container, mLeaveFragment);
                     break;
                 case R.id.permit_rb:
-                    if (mLocationFragment == null) {
-                        mLocationFragment = LocationFragment.newInstance(getString(R.string.item_location));
+                    if (mPermitFragment == null) {
+                        mPermitFragment = PermitFragment.newInstance(getString(R.string.permit));
                     }
-                    transaction.replace(R.id.sub_content, mLocationFragment);
+                    transaction.replace(R.id.main_fragment_container, mPermitFragment);
                     break;
                 case R.id.reportback_rb:
-                    if (mLikeFragment == null) {
-                        mLikeFragment = LikeFragment.newInstance(getString(R.string.item_like));
+                    if (mReportbackFragment == null) {
+                        mReportbackFragment = ReportbackFragment.newInstance(getString(R.string.reportback));
                     }
-                    transaction.replace(R.id.sub_content, mLikeFragment);
+                    transaction.replace(R.id.main_fragment_container, mReportbackFragment);
                     break;
                 case R.id.mine_rb:
-                    if (mPersonFragment == null) {
-                        mPersonFragment = PersonFragment.newInstance(getString(R.string.item_person));
+                    if (mMineFragment == null) {
+                        mMineFragment = MineFragment.newInstance(getString(R.string.mine));
                     }
-                    transaction.replace(R.id.sub_content, mPersonFragment);
+                    transaction.replace(R.id.main_fragment_container, mMineFragment);
                     break;
             }
             setTabState();//设置状态
@@ -104,5 +81,47 @@ public class MainActivity extends Activity {
         }
 
 
+    }
+    private void setTabState() {
+        setLeaveState();
+        setPermitState();
+        setReportbackState();
+        setMineState();
+    }
+
+    /**
+     * set tab home state
+     */
+    private void setLeaveState() {
+        if (mRadioLeave.isChecked()) {
+            //mRadioLeave.setTextColor(ContextCompat.getColor(this, R.color.colorPrimary));
+            mRadioLeave.setBackgroundColor(ContextCompat.getColor(this, R.color.colorPrimary));
+        } else {
+            mRadioLeave.setBackgroundColor(ContextCompat.getColor(this, R.color.white));
+        }
+    }
+
+    private void setPermitState() {
+        if (mRadioPermit.isChecked()) {
+            mRadioPermit.setBackgroundColor(ContextCompat.getColor(this, R.color.colorPrimary));
+        } else {
+            mRadioPermit.setBackgroundColor(ContextCompat.getColor(this, R.color.white));
+        }
+    }
+
+    private void setReportbackState() {
+        if (mRadioReportback.isChecked()) {
+            mRadioReportback.setBackgroundColor(ContextCompat.getColor(this, R.color.colorPrimary));
+        } else {
+            mRadioReportback.setBackgroundColor(ContextCompat.getColor(this, R.color.white));
+        }
+    }
+
+    private void setMineState() {
+        if (mRadioMine.isChecked()) {
+            mRadioMine.setBackgroundColor(ContextCompat.getColor(this, R.color.colorPrimary));
+        } else {
+            mRadioMine.setBackgroundColor(ContextCompat.getColor(this, R.color.white));
+        }
     }
 }
