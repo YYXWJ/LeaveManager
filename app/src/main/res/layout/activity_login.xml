@@ -4,7 +4,9 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".activity.LoginActivity">
+     tools:context=".activity.LoginActivity""
+    android:background="#F5F5F5"
+    >
 
     <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="fill_parent"
@@ -28,8 +30,9 @@
                 android:layout_weight="1"
                 android:gravity="center"
                 android:text="用户登录"
-                android:background="#3CB371	"
-                android:textColor="#FFFFFF"
+
+                android:background="#FFFFFF"
+                android:textColor="#000000"
                 android:textSize="25dip" />
 
 
@@ -54,7 +57,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:padding="10dp"
-                    android:text="账号"
+                    android:text="手机号"
                     android:textColor="#000"
                     android:textSize="17sp" />
 
@@ -66,7 +69,7 @@
                     android:layout_marginLeft="20dip"
                     android:layout_toRightOf="@id/tv_account"
                     android:background="@null"
-                    android:hint="账号"
+                    android:hint="手机号"
 
                     android:textSize="15sp" />
             </RelativeLayout>
@@ -115,14 +118,14 @@
             <CheckBox
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="记住密码"
+                android:text="记住手机号"
                 android:padding="10dp"
 
                 android:layout_alignParentLeft="true"
                 android:id="@+id/rememberPassword"
                 />
 
-            <Button
+            <TextView
                 android:id="@+id/forgetPassword"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -150,7 +153,7 @@
                 android:layout_weight="1"
                 android:gravity="center"
                 android:text="登  录"
-                android:background="#3CB371	"
+                android:background="#3CB371"
                 android:textColor="#FFFFFF"
                 android:textSize="25dip" />
 
