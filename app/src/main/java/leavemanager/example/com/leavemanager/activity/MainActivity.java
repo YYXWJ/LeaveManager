@@ -41,7 +41,7 @@ public class MainActivity extends Activity {
         mRadioGroup.setOnCheckedChangeListener(new MyRadioGroupListener());
         fragmentManager = getFragmentManager();
         FragmentTransaction transaction = fragmentManager.beginTransaction();
-        mLeaveFragment = new LeaveFragment();
+        mLeaveFragment = new LeaveFragment(this);
         transaction.add(R.id.main_fragment_container,mLeaveFragment);
         transaction.commit();
 
