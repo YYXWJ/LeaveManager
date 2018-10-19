@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name = "agree_or_refuse" >
+        <item> 同意 </item>
+        <item> 拒绝 </item>
+    </string-array>
+
+
+
+        <string-array name="spingarr">
+            <item>北京</item>
+            <item>上海</item>
+            <item>广州</item>
+            <item>深圳</item>
+        </string-array>
+
+</resources>
