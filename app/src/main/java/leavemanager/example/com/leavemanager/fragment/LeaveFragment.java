@@ -24,6 +24,7 @@ import leavemanager.example.com.leavemanager.Constants;
 import leavemanager.example.com.leavemanager.MyApplication;
 import leavemanager.example.com.leavemanager.R;
 import leavemanager.example.com.leavemanager.activity.MainActivity;
+import leavemanager.example.com.leavemanager.utils.DateUtil;
 
 public class LeaveFragment extends Fragment {
     private final static String TAG = "LeaveFragment";
@@ -58,11 +59,18 @@ public class LeaveFragment extends Fragment {
             }
 
         });
+        selectEndTimeButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                buildSelectTimeDialog(v);
+            }
+        });
         return view;
         //return super.onCreateView(inflater, container, savedInstanceState);
     }
 
-    private void buildSelectTimeDialog(View v) {
+    private void buildSelectTimeDialog(final View v) {
+        Log.e(TAG,"view----"+v);
         View view = View.inflate(MyApplication.getApplication(), R.layout.date_time_picker, null);
         final DatePicker datePicker = (DatePicker)view.findViewById(R.id.new_act_date_picker);
         final TimePicker timePicker = (TimePicker)view.findViewById(R.id.new_act_time_picker);
@@ -109,15 +117,15 @@ public class LeaveFragment extends Fragment {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 //格式化日期并写入控件
-//                        int arrive_year = datePicker.getYear();
-//                        int arrive_month = datePicker.getMonth();
-//                        int arrive_day = datePicker.getDayOfMonth();
-//                        String dateStr = DateUtil.formatDate(arrive_year, arrive_month, arrive_day);
-//
-//                        int arrive_hour = timePicker.getCurrentHour();
-//                        int arrive_min = timePicker.getCurrentMinute();
-//                        String timeStr = DateUtil.formatTime(arrive_hour, arrive_min);
-//                        arriveTimeBtn.setText(timeStr);
+                        int arrive_year = datePicker.getYear();
+                        int arrive_month = datePicker.getMonth();
+                        int arrive_day = datePicker.getDayOfMonth();
+                        String dateStr = DateUtil.formatDate(arrive_year, arrive_month, arrive_day);
+
+                        int arrive_hour = timePicker.getCurrentHour();
+                        int arrive_min = timePicker.getCurrentMinute();
+                        String timeStr = DateUtil.formatTime(arrive_hour, arrive_min);
+                ((Button)v).setText(dateStr+timeStr);
 
             }
         });
