@@ -71,7 +71,7 @@
                     android:layout_marginLeft="20dip"
                     android:layout_toRightOf="@id/tv_account"
                     android:background="@null"
-                    android:hint="手机号"
+                    android:hint="用户名"
 
                     android:textSize="15sp" />
             </RelativeLayout>
@@ -104,7 +104,6 @@
                     android:background="@null"
                     android:hint="密码"
 
-                    android:inputType="numberPassword"
                     android:textSize="15sp" />
             </RelativeLayout>
 

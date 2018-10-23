@@ -2,9 +2,12 @@ package leavemanager.example.com.leavemanager.fragment;
 
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
+import android.app.Dialog;
 import android.app.Fragment;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -12,9 +15,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.DatePicker;
-import android.widget.LinearLayout;
-import android.widget.NumberPicker;
 import android.widget.TimePicker;
+import android.widget.Toast;
 
 import org.jetbrains.annotations.Nullable;
 
@@ -24,14 +26,22 @@ import leavemanager.example.com.leavemanager.Constants;
 import leavemanager.example.com.leavemanager.MyApplication;
 import leavemanager.example.com.leavemanager.R;
 import leavemanager.example.com.leavemanager.activity.MainActivity;
+import leavemanager.example.com.leavemanager.been.ApplyPersonBeen;
+import leavemanager.example.com.leavemanager.been.LoginBeen;
+import leavemanager.example.com.leavemanager.node.LeaveInfo;
 import leavemanager.example.com.leavemanager.utils.DateUtil;
+import leavemanager.example.com.leavemanager.utils.DialogUtil;
+import leavemanager.example.com.leavemanager.utils.http.ApplyPersonsService;
+
 
 public class LeaveFragment extends Fragment {
     private final static String TAG = "LeaveFragment";
     private Button selectStartTimeButton;
     private Button selectEndTimeButton;
+    private Button selectApplyPerson;
     private Button sendButton;
-    private Context mContext;
+    private static Context mContext;
+    private static ProgressDialog progressDialog = null;
     public LeaveFragment(){
 
     }
@@ -52,6 +62,23 @@ public class LeaveFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_leave, container, false);
         selectStartTimeButton = view.findViewById(R.id.start_time);
         selectEndTimeButton = view.findViewById(R.id.end_time);
+        selectApplyPerson = view.findViewById(R.id.apply_person);
+        selectApplyPerson.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                StringBuffer sb = new StringBuffer();
+                for(LoginBeen.person p: MyApplication.getLoginBeen().getData()){
+                    if(p.getTyping().equals("A")){
+                        sb.append(p.getGroupid());
+                        sb.append(";");
+                    }
+                }
+                sb.deleteCharAt(sb.length() - 1);
+                progressDialog = ProgressDialog.show(mContext, "请稍等...", "获取名单中...", true);
+                ApplyPersonsService.getApplyPersions(sb.toString());
+               // DialogUtil.selectApplyPersions(mContext).show();
+            }
+        });
         selectStartTimeButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -63,6 +90,18 @@ public class LeaveFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 buildSelectTimeDialog(v);
+            }
+        });
+        sendButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                LeaveInfo leaveInfo = new LeaveInfo();
+                leaveInfo.setApplicantid("123123;123123");
+                leaveInfo.setFromdate("20181818");
+                leaveInfo.setTodate("123123123");
+                leaveInfo.setLeavesite("123123");
+                leaveInfo.setLeaveevent("123123");
+                leaveInfo.
             }
         });
         return view;
@@ -130,5 +169,52 @@ public class LeaveFragment extends Fragment {
             }
         });
         builder.show();
+    }
+    public static void getApplyPersonsFail(){
+        if(progressDialog!=null){
+            progressDialog.dismiss();
+        }
+        Toast.makeText(MyApplication.getApplication(),"获取名单失败，请重试",Toast.LENGTH_LONG).show();
+    }
+    public static void getApplyPersonsSuccess(ApplyPersonBeen obj){
+        if(progressDialog!=null){
+            progressDialog.dismiss();
+        }
+        selectApplyPersions(mContext,obj).show();
+    }
+    public static Dialog selectApplyPersions(Context context, ApplyPersonBeen obj){
+
+        final String items[] = new String[obj.getData().size()];
+        final boolean selected[] = new boolean[obj.getData().size()];
+        int i = 0;
+        for(ApplyPersonBeen.person p : obj.getData()){
+            items[i] = p.getName();
+            selected[i++] = false;
+        }
+        final AlertDialog.Builder builder = new AlertDialog.Builder(context,3);
+        builder.setTitle("请选择请假人");
+        builder.setIcon(R.mipmap.ic_launcher);
+        builder.setMultiChoiceItems(items, selected,
+                new DialogInterface.OnMultiChoiceClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which,
+                                        boolean isChecked) {
+
+                    }
+                });
+        builder.setPositiveButton("确定", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                StringBuffer sb = new StringBuffer();
+                for (int i = 0; i < selected.length; i++) {
+                    sb.append(items[i]);
+                    sb.append(",");
+                }
+                sb.deleteCharAt(sb.length() - 1);
+                dialog.dismiss();
+
+            }
+        });
+        return builder.create();
     }
 }
