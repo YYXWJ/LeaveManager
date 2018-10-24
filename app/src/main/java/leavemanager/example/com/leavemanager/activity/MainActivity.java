@@ -161,8 +161,12 @@ package leavemanager.example.com.leavemanager.activity;
 //    }
 //}
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.view.KeyEvent;
 
 import leavemanager.example.com.leavemanager.BottomBar;
 import leavemanager.example.com.leavemanager.R;
@@ -200,6 +204,35 @@ public class MainActivity extends AppCompatActivity {
                         R.drawable.mine_after)
 
                 .build();
+    }
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if(keyCode == KeyEvent.KEYCODE_BACK){
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            builder.setMessage("确定要退出吗？")
+                    .setCancelable(false)
+                    .setPositiveButton("确定",
+                            new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog,
+                                                    int id) {
+                                    Intent intent = new Intent(Intent.ACTION_MAIN);
+                                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                                    intent.addCategory(Intent.CATEGORY_HOME);
+                                    startActivity(intent);
+                                    System.exit(0);
+                                }
+                            })
+                    .setNegativeButton("取消",
+                            new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int id) {
+                                    dialog.cancel();
+                                }
+                            });
+            AlertDialog alert = builder.create();
+            alert.show();
+            return true;
+        }
+        return super.onKeyDown(keyCode, event);
     }
 }
 

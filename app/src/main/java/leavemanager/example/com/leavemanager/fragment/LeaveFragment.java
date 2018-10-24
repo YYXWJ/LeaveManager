@@ -102,7 +102,12 @@ public class LeaveFragment extends Fragment {
 
                     @Override
                     public void onFailed() {
-                        getApplyPersonsFail();
+                        getActivity().runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                getApplyPersonsFail();
+                            }
+                        });
                     }
                 });
                 getActivity().runOnUiThread(new Runnable() {
@@ -255,8 +260,7 @@ public class LeaveFragment extends Fragment {
                 }
                 sb.deleteCharAt(sb.length() - 1);
                 //这里需要加一个刷新控件的逻辑
-                //selectApplyPerson.setText(sb.toString());
-                selectApplyPerson.setText("123123123");
+                selectApplyPerson.setText(sb.toString());
                 dialog.dismiss();
 
             }
