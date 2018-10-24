@@ -21,6 +21,9 @@ public class MyApplication extends Application {
     public final static int LOGIN_SUCCESS=1;
     public final static int APPLYPERSON_FAIL=3;
     public final static int APPLYPERSON_SUCCESS=4;
+    public final static int PERMIT_FAIL=5;
+    public final static int PERMIT_SUCCESS= 6;
+
     private static LoginBeen loginBeen = null;
 
     public static LoginBeen getLoginBeen(){
@@ -46,12 +49,9 @@ public class MyApplication extends Application {
         public void handleMessage(Message msg) {
             super.handleMessage(msg);
             Looper.prepare();
-
             switch (msg.what) {
                 case LOGIN_FAIL://登录失败
-                    //LoginActivity.loginFail();
-                    //test
-                    LoginActivity.loginSuccess();
+                    LoginActivity.loginFail();
                     break;
                 case LOGIN_SUCCESS://登录成功
                     loginBeen = (LoginBeen)msg.obj;
@@ -62,6 +62,10 @@ public class MyApplication extends Application {
                     break;
                 case APPLYPERSON_SUCCESS:
                     LeaveFragment.getApplyPersonsSuccess((ApplyPersonBeen)msg.obj);
+                    break;
+                case PERMIT_FAIL:
+                    break;
+                case PERMIT_SUCCESS:
                     break;
             }
             Looper.loop();
