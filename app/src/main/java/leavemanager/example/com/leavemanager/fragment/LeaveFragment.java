@@ -182,7 +182,14 @@ public class LeaveFragment extends Fragment {
         timePicker.setIs24HourView(true);
         timePicker.setCurrentHour(hour);
         timePicker.setCurrentMinute(minute);
-
+        timePicker.setOnTimeChangedListener(new TimePicker.OnTimeChangedListener() {  //获取当前选择的时间
+            @Override
+            public void onTimeChanged(TimePicker view, int hourOfDay, int minute) {
+//                Toast.makeText(getContext(),
+//                                                        hourOfDay + "小时" + minute + "分钟",
+//                                                        Toast.LENGTH_SHORT).show();
+            }
+        });
         // Build DateTimeDialog
         AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
         builder.setView(view);
@@ -248,7 +255,8 @@ public class LeaveFragment extends Fragment {
                 }
                 sb.deleteCharAt(sb.length() - 1);
                 //这里需要加一个刷新控件的逻辑
-                selectApplyPerson.setText(sb.toString());
+                //selectApplyPerson.setText(sb.toString());
+                selectApplyPerson.setText("123123123");
                 dialog.dismiss();
 
             }
