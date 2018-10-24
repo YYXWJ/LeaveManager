@@ -9,9 +9,18 @@ public class LoginBeen {
     public class person{
         private int id;
         private int id1;
+        private String name;
         private String groupid;
         private String typing;
         private String groupname;
+        public String getName() {
+            return name;
+        }
+
+        public void setName(String name) {
+            this.name = name;
+        }
+
         public String getTyping() {
             return typing;
         }

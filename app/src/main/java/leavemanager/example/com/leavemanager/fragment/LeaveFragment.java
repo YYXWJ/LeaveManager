@@ -7,7 +7,6 @@ import android.support.v4.app.Fragment;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -21,30 +20,30 @@ import android.widget.Toast;
 
 import org.jetbrains.annotations.Nullable;
 
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Date;
 
 import leavemanager.example.com.leavemanager.Constants;
 import leavemanager.example.com.leavemanager.MyApplication;
 import leavemanager.example.com.leavemanager.R;
-import leavemanager.example.com.leavemanager.activity.MainActivity;
 import leavemanager.example.com.leavemanager.been.ApplyPersonBeen;
 import leavemanager.example.com.leavemanager.been.LoginBeen;
-import leavemanager.example.com.leavemanager.node.LeaveInfo;
 import leavemanager.example.com.leavemanager.node.ReceiveLeaveInfo;
 import leavemanager.example.com.leavemanager.utils.DateUtil;
-import leavemanager.example.com.leavemanager.utils.DialogUtil;
 import leavemanager.example.com.leavemanager.utils.http.ApplyPersonsService;
 import leavemanager.example.com.leavemanager.utils.http.PermitService;
 
 
 public class LeaveFragment extends Fragment {
     private final static String TAG = "LeaveFragment";
-    private EditText selectStartTimeButton;
-    private EditText selectEndTimeButton;
-    private EditText selectApplyPerson;
+    private EditText et_selectStartTime;
+    private EditText et_selectEndTime;
+    private EditText et_selectApplyPerson;
     private EditText et_place;
     private EditText et_event;
-
+    private EditText et_real_apply_person;
+    private EditText et_now_time;
     private Button sendButton;
 
     private static Context mContext;
@@ -67,13 +66,25 @@ public class LeaveFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_leave, container, false);
-        selectStartTimeButton = view.findViewById(R.id.start_time);
-        selectEndTimeButton = view.findViewById(R.id.end_time);
-        selectApplyPerson = view.findViewById(R.id.apply_person);
+        et_selectStartTime = view.findViewById(R.id.start_time);
+        et_selectEndTime = view.findViewById(R.id.end_time);
+        et_selectApplyPerson = view.findViewById(R.id.apply_person);
         et_place = view.findViewById(R.id.place);
         et_event = view.findViewById(R.id.event);
         sendButton = view.findViewById(R.id.leave_submit);
-        selectApplyPerson.setOnClickListener(new View.OnClickListener() {
+        et_real_apply_person = view.findViewById(R.id.real_apply_person);
+        et_real_apply_person.setEnabled(false);
+        et_real_apply_person.setFocusable(false);
+        et_real_apply_person.setKeyListener(null);
+        et_real_apply_person.setText(MyApplication.getLoginBeen().getData().get(0).getName());
+        et_now_time = view.findViewById(R.id.apply_time);
+        et_now_time.setEnabled(false);
+        et_now_time.setFocusable(false);
+        et_now_time.setKeyListener(null);
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy年MM月dd日 HH:mm:ss");
+        Date date = new Date(System.currentTimeMillis());
+        et_now_time.setText(simpleDateFormat.format(date));
+        et_selectApplyPerson.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if(MyApplication.getLoginBeen() == null){
@@ -119,14 +130,14 @@ public class LeaveFragment extends Fragment {
                // DialogUtil.selectApplyPersions(mContext).show();
             }
         });
-        selectStartTimeButton.setOnClickListener(new View.OnClickListener() {
+        et_selectStartTime.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 buildSelectTimeDialog(v);
             }
 
         });
-        selectEndTimeButton.setOnClickListener(new View.OnClickListener() {
+        et_selectEndTime.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 buildSelectTimeDialog(v);
@@ -135,14 +146,43 @@ public class LeaveFragment extends Fragment {
         sendButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                if(et_selectApplyPerson.getText().equals("")||
+                        et_selectStartTime.getText().equals("")||
+                        et_selectEndTime.getText().equals("")||
+                        et_place.getText().equals("")||
+                        et_event.getText().equals("")){
+                    Toast.makeText(getContext(),"假条信息不全,请补充请假信息",Toast.LENGTH_LONG).show();
+                    return;
+                }
                 ReceiveLeaveInfo receiveLeaveInfo = new ReceiveLeaveInfo();
-                receiveLeaveInfo.setApplyPersons("123123;123123");
-                receiveLeaveInfo.setStartTime("20181818");
-                receiveLeaveInfo.setEndTIme("123123123");
-                receiveLeaveInfo.setPlace("123123");
-                receiveLeaveInfo.setPermitPerson("name");
-                receiveLeaveInfo.setPermitTime("2002020220");
-                PermitService.permitLeaveInfo(receiveLeaveInfo);
+                receiveLeaveInfo.setApplyPersons(et_selectApplyPerson.getText().toString());
+                receiveLeaveInfo.setStartTime(et_selectStartTime.getText().toString());
+                receiveLeaveInfo.setEndTIme(et_selectEndTime.getText().toString());
+                receiveLeaveInfo.setPlace(et_place.getText().toString());
+                receiveLeaveInfo.setEvent(et_event.getText().toString());
+                receiveLeaveInfo.setPermitTime(et_now_time.getText().toString());
+                receiveLeaveInfo.setPermitPerson(et_real_apply_person.getText().toString());
+                PermitService.permitLeaveInfo(receiveLeaveInfo, new PermitService.CallBack() {
+                    @Override
+                    public void onSuccessed() {
+                        getActivity().runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                Toast.makeText(getContext(),"提交成功",Toast.LENGTH_LONG).show();
+                            }
+                        });
+                    }
+
+                    @Override
+                    public void onFailed() {
+                        getActivity().runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                Toast.makeText(getContext(),"提交失败",Toast.LENGTH_LONG).show();
+                            }
+                        });
+                    }
+                });
             }
         });
         return view;
@@ -150,7 +190,6 @@ public class LeaveFragment extends Fragment {
     }
 
     private void buildSelectTimeDialog(final View v) {
-        Log.e(TAG,"view----"+v);
         View view = View.inflate(MyApplication.getApplication(), R.layout.date_time_picker, null);
         final DatePicker datePicker = (DatePicker)view.findViewById(R.id.new_act_date_picker);
         final TimePicker timePicker = (TimePicker)view.findViewById(R.id.new_act_time_picker);
@@ -255,12 +294,13 @@ public class LeaveFragment extends Fragment {
             public void onClick(DialogInterface dialog, int which) {
                 StringBuffer sb = new StringBuffer();
                 for (int i = 0; i < selected.length; i++) {
-                    sb.append(items[i]);
-                    sb.append(",");
+                    if(selected[i]==true){
+                        sb.append(items[i]);
+                        sb.append(",");
+                    }
                 }
                 sb.deleteCharAt(sb.length() - 1);
-                //这里需要加一个刷新控件的逻辑
-                selectApplyPerson.setText(sb.toString());
+                et_selectApplyPerson.setText(sb.toString());
                 dialog.dismiss();
 
             }

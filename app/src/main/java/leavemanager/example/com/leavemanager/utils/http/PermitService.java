@@ -22,11 +22,14 @@ import leavemanager.example.com.leavemanager.node.ReceiveLeaveInfo;
 public class PermitService {
     private static String serverURL = "http://118.190.83.62:8085";
     //private static Handler loginHandler = MyApplication.hanlder;
-
+    public interface CallBack{
+        void onSuccessed();
+        void onFailed();
+    }
     /**
      * 用户注册
      */
-    public static boolean permitLeaveInfo(final ReceiveLeaveInfo receiveLeaveInfo) {
+    public static boolean permitLeaveInfo(final ReceiveLeaveInfo receiveLeaveInfo,final CallBack callBack) {
         new Thread() {
             @Override
             public void run() {
@@ -59,37 +62,30 @@ public class PermitService {
                     int stat = connection.getResponseCode();
                     BufferedReader br = null;
                     ApplyReceiveBeen applyReceiveBeen = null;
+                    //permitFailed();
+                    LoginBeen loginBeen = null;
                     if (stat == 200) {
                         br = new BufferedReader(new InputStreamReader(connection.getInputStream()));
-                        //applyReceiveBeen = formatData(br.readLine());
+                        loginBeen = formatData(br.readLine());
                     } else {
-                        //permitFailed();
+                        //LoginFailed();
+                        callBack.onFailed();
                         return;
                     }
-                    if (applyReceiveBeen.getCode() == 0) {
-                       // permitSuccessed(applyReceiveBeen);
+                    if (loginBeen.getCode() == 0) {
+                        //LoginSuccessed(loginBeen);
+                        callBack.onSuccessed();
                         return;
                     } else {
-                        //permitFailed();
-                        LoginBeen loginBeen = null;
-                        if (stat == 200) {
-                            br = new BufferedReader(new InputStreamReader(connection.getInputStream()));
-                            loginBeen = formatData(br.readLine());
-                        } else {
-                            LoginFailed();
-                            return;
-                        }
-                        if (loginBeen.getCode() == 0) {
-                            LoginSuccessed(loginBeen);
-                            return;
-                        } else {
-                            LoginFailed();
-                            return;
-                        }
-                    }}catch(Exception e)
+                        //LoginFailed();
+                        callBack.onFailed();
+                        return;
+                    }
+                    }catch(Exception e)
                     {
                         e.printStackTrace();
                         //permitFailed();
+                        callBack.onFailed();
                     }
                 }
             }.start();
