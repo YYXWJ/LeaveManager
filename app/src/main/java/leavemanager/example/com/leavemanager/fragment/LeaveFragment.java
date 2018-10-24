@@ -2,18 +2,16 @@ package leavemanager.example.com.leavemanager.fragment;
 
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
-import android.app.Fragment;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.DatePicker;
-import android.widget.LinearLayout;
-import android.widget.NumberPicker;
 import android.widget.TimePicker;
 
 import org.jetbrains.annotations.Nullable;
@@ -23,7 +21,6 @@ import java.util.Calendar;
 import leavemanager.example.com.leavemanager.Constants;
 import leavemanager.example.com.leavemanager.MyApplication;
 import leavemanager.example.com.leavemanager.R;
-import leavemanager.example.com.leavemanager.activity.MainActivity;
 import leavemanager.example.com.leavemanager.utils.DateUtil;
 
 public class LeaveFragment extends Fragment {
@@ -50,7 +47,7 @@ public class LeaveFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_leave, container, false);
-        selectStartTimeButton = view.findViewById(R.id.start_time);
+        selectStartTimeButton =  view.findViewById(R.id.start_time);
         selectEndTimeButton = view.findViewById(R.id.end_time);
         selectStartTimeButton.setOnClickListener(new View.OnClickListener() {
             @Override
