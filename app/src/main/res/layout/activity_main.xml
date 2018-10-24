@@ -1,4 +1,41 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!--<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"-->
+    <!--android:layout_width="match_parent"-->
+    <!--android:layout_height="match_parent"-->
+    <!--android:orientation="vertical">-->
+    <!--&lt;!&ndash;<include layout="@layout/fragment_content"/>&ndash;&gt;-->
+    <!--<FrameLayout-->
+        <!--android:id="@+id/main_fragment_container"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="match_parent"-->
+        <!--android:layout_above="@id/radio_group"-->
+        <!--android:background="#F1F1F1">-->
+    <!--</FrameLayout>-->
+    <!--<RadioGroup android:id="@+id/radio_group"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="56dp"-->
+        <!--android:layout_alignParentBottom="true"-->
+        <!--android:background="@color/white"-->
+        <!--android:orientation="horizontal">-->
+        <!--<RadioButton-->
+            <!--android:id="@+id/leave_rb"-->
+            <!--style="@style/radiobutton_style"-->
+            <!--android:checked="true"-->
+            <!--android:text="@string/leave" />-->
+        <!--<RadioButton-->
+            <!--android:id="@+id/permit_rb"-->
+            <!--style="@style/radiobutton_style"-->
+            <!--android:text="@string/permit"/>-->
+        <!--<RadioButton-->
+            <!--android:id="@+id/reportback_rb"-->
+            <!--style="@style/radiobutton_style"-->
+            <!--android:text="@string/reportback"/>-->
+        <!--<RadioButton-->
+            <!--android:id="@+id/mine_rb"-->
+            <!--style="@style/radiobutton_style"-->
+            <!--android:text="@string/mine"/>-->
+    <!--</RadioGroup></RelativeLayout>-->
+
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"

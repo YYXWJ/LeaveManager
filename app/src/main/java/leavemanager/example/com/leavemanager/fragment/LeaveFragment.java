@@ -2,17 +2,22 @@ package leavemanager.example.com.leavemanager.fragment;
 
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
+import android.app.Dialog;
+import android.support.v4.app.Fragment;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.DatePicker;
+import android.widget.EditText;
 import android.widget.TimePicker;
+import android.widget.Toast;
 
 import org.jetbrains.annotations.Nullable;
 
@@ -21,14 +26,29 @@ import java.util.Calendar;
 import leavemanager.example.com.leavemanager.Constants;
 import leavemanager.example.com.leavemanager.MyApplication;
 import leavemanager.example.com.leavemanager.R;
+import leavemanager.example.com.leavemanager.activity.MainActivity;
+import leavemanager.example.com.leavemanager.been.ApplyPersonBeen;
+import leavemanager.example.com.leavemanager.been.LoginBeen;
+import leavemanager.example.com.leavemanager.node.LeaveInfo;
+import leavemanager.example.com.leavemanager.node.ReceiveLeaveInfo;
 import leavemanager.example.com.leavemanager.utils.DateUtil;
+import leavemanager.example.com.leavemanager.utils.DialogUtil;
+import leavemanager.example.com.leavemanager.utils.http.ApplyPersonsService;
+import leavemanager.example.com.leavemanager.utils.http.PermitService;
+
 
 public class LeaveFragment extends Fragment {
     private final static String TAG = "LeaveFragment";
-    private Button selectStartTimeButton;
-    private Button selectEndTimeButton;
+    private EditText selectStartTimeButton;
+    private EditText selectEndTimeButton;
+    private EditText selectApplyPerson;
+    private EditText et_place;
+    private EditText et_event;
+
     private Button sendButton;
-    private Context mContext;
+
+    private static Context mContext;
+    private static ProgressDialog progressDialog = null;
     public LeaveFragment(){
 
     }
@@ -47,8 +67,32 @@ public class LeaveFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_leave, container, false);
-        selectStartTimeButton =  view.findViewById(R.id.start_time);
+        selectStartTimeButton = view.findViewById(R.id.start_time);
         selectEndTimeButton = view.findViewById(R.id.end_time);
+        selectApplyPerson = view.findViewById(R.id.apply_person);
+        et_place = view.findViewById(R.id.place);
+        et_event = view.findViewById(R.id.event);
+        sendButton = view.findViewById(R.id.leave_submit);
+        selectApplyPerson.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(MyApplication.getLoginBeen().getData() == null){
+                    return;
+                }
+                StringBuffer sb = new StringBuffer();
+
+                for(LoginBeen.person p: MyApplication.getLoginBeen().getData()){
+                    if(p.getTyping().equals("A")){
+                        sb.append(p.getGroupid());
+                        sb.append(";");
+                    }
+                }
+                sb.deleteCharAt(sb.length() - 1);
+                progressDialog = ProgressDialog.show(mContext, "请稍等...", "获取名单中...", true);
+                ApplyPersonsService.getApplyPersions(sb.toString());
+               // DialogUtil.selectApplyPersions(mContext).show();
+            }
+        });
         selectStartTimeButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -60,6 +104,19 @@ public class LeaveFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 buildSelectTimeDialog(v);
+            }
+        });
+        sendButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ReceiveLeaveInfo receiveLeaveInfo = new ReceiveLeaveInfo();
+                receiveLeaveInfo.setApplyPersons("123123;123123");
+                receiveLeaveInfo.setStartTime("20181818");
+                receiveLeaveInfo.setEndTIme("123123123");
+                receiveLeaveInfo.setPlace("123123");
+                receiveLeaveInfo.setPermitPerson("name");
+                receiveLeaveInfo.setPermitTime("2002020220");
+                PermitService.permitLeaveInfo(receiveLeaveInfo);
             }
         });
         return view;
@@ -122,10 +179,58 @@ public class LeaveFragment extends Fragment {
                         int arrive_hour = timePicker.getCurrentHour();
                         int arrive_min = timePicker.getCurrentMinute();
                         String timeStr = DateUtil.formatTime(arrive_hour, arrive_min);
-                ((Button)v).setText(dateStr+timeStr);
+                ((EditText)v).setText(dateStr+timeStr);
 
             }
         });
         builder.show();
+    }
+    public static void getApplyPersonsFail(){
+        if(progressDialog!=null){
+            progressDialog.dismiss();
+        }
+        Toast.makeText(MyApplication.getApplication(),"获取名单失败，请重试",Toast.LENGTH_LONG).show();
+    }
+    public static void getApplyPersonsSuccess(ApplyPersonBeen obj){
+        if(progressDialog!=null){
+            progressDialog.dismiss();
+        }
+        selectApplyPersions(mContext,obj).show();
+    }
+    public static Dialog selectApplyPersions(Context context, ApplyPersonBeen obj){
+
+        final String items[] = new String[obj.getData().size()];
+        final boolean selected[] = new boolean[obj.getData().size()];
+        int i = 0;
+        for(ApplyPersonBeen.person p : obj.getData()){
+            items[i] = p.getName();
+            selected[i++] = false;
+        }
+        final AlertDialog.Builder builder = new AlertDialog.Builder(context,3);
+        builder.setTitle("请选择请假人");
+        builder.setIcon(R.mipmap.ic_launcher);
+        builder.setMultiChoiceItems(items, selected,
+                new DialogInterface.OnMultiChoiceClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which,
+                                        boolean isChecked) {
+
+                    }
+                });
+        builder.setPositiveButton("确定", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                StringBuffer sb = new StringBuffer();
+                for (int i = 0; i < selected.length; i++) {
+                    sb.append(items[i]);
+                    sb.append(",");
+                }
+                sb.deleteCharAt(sb.length() - 1);
+                //这里需要加一个刷新控件的逻辑
+                dialog.dismiss();
+
+            }
+        });
+        return builder.create();
     }
 }

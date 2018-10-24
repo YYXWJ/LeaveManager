@@ -9,13 +9,26 @@ import android.widget.Toast;
 
 import leavemanager.example.com.leavemanager.activity.LoginActivity;
 import leavemanager.example.com.leavemanager.activity.MainActivity;
+import leavemanager.example.com.leavemanager.been.ApplyPersonBeen;
+import leavemanager.example.com.leavemanager.been.LoginBeen;
+import leavemanager.example.com.leavemanager.fragment.LeaveFragment;
+import leavemanager.example.com.leavemanager.utils.DialogUtil;
 
 public class MyApplication extends Application {
     private static MyApplication myApplication = null;
     public static Handler hanlder = new MyHandler();
     public final static int LOGIN_FAIL=0;
     public final static int LOGIN_SUCCESS=1;
+    public final static int APPLYPERSON_FAIL=3;
+    public final static int APPLYPERSON_SUCCESS=4;
+    private static LoginBeen loginBeen = null;
 
+    public static LoginBeen getLoginBeen(){
+        if(loginBeen != null){
+            return loginBeen;
+        }
+        return null;
+    }
     public static MyApplication getApplication() {
         return myApplication;
     }
@@ -36,10 +49,19 @@ public class MyApplication extends Application {
 
             switch (msg.what) {
                 case LOGIN_FAIL://登录失败
-                    LoginActivity.loginFail();
+                    //LoginActivity.loginFail();
+                    //test
+                    LoginActivity.loginSuccess();
                     break;
                 case LOGIN_SUCCESS://登录成功
+                    loginBeen = (LoginBeen)msg.obj;
                     LoginActivity.loginSuccess();
+                    break;
+                case APPLYPERSON_FAIL:
+                    LeaveFragment.getApplyPersonsFail();
+                    break;
+                case APPLYPERSON_SUCCESS:
+                    LeaveFragment.getApplyPersonsSuccess((ApplyPersonBeen)msg.obj);
                     break;
             }
             Looper.loop();
