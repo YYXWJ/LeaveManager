@@ -46,7 +46,7 @@ public class LoginService {
                      * 请求地址
                      */
                     //String url = serverURL+"/persion/login";
-                    String url ="http://192.168.1.102:8085/persion/login";
+                    String url ="http://10.103.241.30:8085/persion/login";
                     HttpURLConnection connection = (HttpURLConnection) new URL(url).openConnection();
                     connection.setConnectTimeout(5000);
                     connection.setRequestMethod("POST");

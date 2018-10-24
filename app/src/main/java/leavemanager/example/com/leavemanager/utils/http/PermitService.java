@@ -10,9 +10,8 @@ import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
-import leavemanager.example.com.leavemanager.MyApplication;
 import leavemanager.example.com.leavemanager.been.LoginBeen;
-import leavemanager.example.com.leavemanager.node.UserInfo;
+import leavemanager.example.com.leavemanager.node.ReceiveLeaveInfo;
 
 public class PermitService {
     private static String serverURL="http://118.190.83.62:8085";
@@ -20,7 +19,7 @@ public class PermitService {
     /**
      * 用户注册
      */
-    public static boolean userRegister(final UserInfo user)
+    public static boolean permitLeaveInfo(final ReceiveLeaveInfo receiveLeaveInfo)
     {
         new Thread()
         {
@@ -29,8 +28,13 @@ public class PermitService {
             {
                 try {
                     JSONObject userJSON = new JSONObject();
-                    userJSON.put("username",user.getUsername());
-                    userJSON.put("password",user.getPasswd());
+                    userJSON.put("username",receiveLeaveInfo.getApplyPersons());
+                    userJSON.put("password",receiveLeaveInfo.getStartTime());
+                    userJSON.put("password",receiveLeaveInfo.getEndTIme());
+                    userJSON.put("password",receiveLeaveInfo.getPlace());
+                    userJSON.put("password",receiveLeaveInfo.getEvent());
+                    userJSON.put("password",receiveLeaveInfo.getPermitPerson());
+                    userJSON.put("password",receiveLeaveInfo.getPermitTime());
                     String content = String.valueOf(userJSON);
                     /**
                      * 请求地址
@@ -76,6 +80,7 @@ public class PermitService {
     }
 
     private static LoginBeen formatData(String s) {
+        return null;
     }
     private static void LoginFailed() {
     }

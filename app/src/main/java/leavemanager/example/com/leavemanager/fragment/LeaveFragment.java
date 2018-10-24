@@ -15,6 +15,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.DatePicker;
+import android.widget.EditText;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
@@ -29,9 +30,11 @@ import leavemanager.example.com.leavemanager.activity.MainActivity;
 import leavemanager.example.com.leavemanager.been.ApplyPersonBeen;
 import leavemanager.example.com.leavemanager.been.LoginBeen;
 import leavemanager.example.com.leavemanager.node.LeaveInfo;
+import leavemanager.example.com.leavemanager.node.ReceiveLeaveInfo;
 import leavemanager.example.com.leavemanager.utils.DateUtil;
 import leavemanager.example.com.leavemanager.utils.DialogUtil;
 import leavemanager.example.com.leavemanager.utils.http.ApplyPersonsService;
+import leavemanager.example.com.leavemanager.utils.http.PermitService;
 
 
 public class LeaveFragment extends Fragment {
@@ -39,7 +42,11 @@ public class LeaveFragment extends Fragment {
     private Button selectStartTimeButton;
     private Button selectEndTimeButton;
     private Button selectApplyPerson;
+    private EditText et_place;
+    private EditText et_event;
+
     private Button sendButton;
+
     private static Context mContext;
     private static ProgressDialog progressDialog = null;
     public LeaveFragment(){
@@ -63,10 +70,17 @@ public class LeaveFragment extends Fragment {
         selectStartTimeButton = view.findViewById(R.id.start_time);
         selectEndTimeButton = view.findViewById(R.id.end_time);
         selectApplyPerson = view.findViewById(R.id.apply_person);
+        et_place = view.findViewById(R.id.place);
+        et_event = view.findViewById(R.id.event);
+        sendButton = view.findViewById(R.id.leave_submit);
         selectApplyPerson.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                if(MyApplication.getLoginBeen().getData() == null){
+                    return;
+                }
                 StringBuffer sb = new StringBuffer();
+
                 for(LoginBeen.person p: MyApplication.getLoginBeen().getData()){
                     if(p.getTyping().equals("A")){
                         sb.append(p.getGroupid());
@@ -95,13 +109,14 @@ public class LeaveFragment extends Fragment {
         sendButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                LeaveInfo leaveInfo = new LeaveInfo();
-                leaveInfo.setApplicantid("123123;123123");
-                leaveInfo.setFromdate("20181818");
-                leaveInfo.setTodate("123123123");
-                leaveInfo.setLeavesite("123123");
-                leaveInfo.setLeaveevent("123123");
-                leaveInfo.
+                ReceiveLeaveInfo receiveLeaveInfo = new ReceiveLeaveInfo();
+                receiveLeaveInfo.setApplyPersons("123123;123123");
+                receiveLeaveInfo.setStartTime("20181818");
+                receiveLeaveInfo.setEndTIme("123123123");
+                receiveLeaveInfo.setPlace("123123");
+                receiveLeaveInfo.setPermitPerson("name");
+                receiveLeaveInfo.setPermitTime("2002020220");
+                PermitService.permitLeaveInfo(receiveLeaveInfo);
             }
         });
         return view;
@@ -211,6 +226,7 @@ public class LeaveFragment extends Fragment {
                     sb.append(",");
                 }
                 sb.deleteCharAt(sb.length() - 1);
+                //这里需要加一个刷新控件的逻辑
                 dialog.dismiss();
 
             }

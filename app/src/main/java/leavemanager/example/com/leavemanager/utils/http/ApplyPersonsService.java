@@ -31,7 +31,6 @@ public class ApplyPersonsService {
             public void run()
             {
                 try {
-                    Log.e("123",Groups);
                     JSONObject userJSON = new JSONObject();
                     userJSON.put("groupid",Groups);
                     String content = String.valueOf(userJSON);
