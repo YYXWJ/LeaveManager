@@ -9,7 +9,7 @@
     xmlns:app="http://schemas.android.com/apk/lib/com.app.chasebank"
     >
 
-           <!--暂时用button代替多选对话框和时间日期组件-->
+    <!--暂时用button代替多选对话框和时间日期组件-->
     <ScrollView
 
         android:id="@+id/scrollView1"
@@ -56,17 +56,15 @@
                 android:gravity="center_vertical"
                 android:orientation="horizontal">
 
-                <!--<ListView-->
-                <!--android:layout_width="wrap_content"-->
-                <!--android:layout_height="40dp"-->
-                <!--android:layout_weight="1"-->
-                <!--/>-->
-                <Button
+
+                <EditText
                     android:id="@+id/apply_person"
                     android:layout_width="wrap_content"
                     android:layout_height="40dip"
                     android:layout_weight="5"
-                    android:text="申请人" />
+                    android:editable="false"
+                    android:gravity="center"
+                    android:hint="申请人" />
 
                 <TextView
                     android:id="@+id/niyu"
@@ -88,30 +86,48 @@
                 android:gravity="center_vertical"
                 android:orientation="horizontal">
 
-                <Button
+                <EditText
                     android:id="@+id/start_time"
                     android:layout_width="wrap_content"
                     android:layout_height="40dip"
-                    android:layout_weight="4"
-                    android:text="开始时间" />
+                    android:layout_weight="5"
+                    android:gravity="center"
+                    android:editable="false"
+                    android:hint="开始时间" />
 
                 <TextView
                     android:id="@+id/zhi"
                     android:layout_width="wrap_content"
                     android:layout_height="40dip"
 
-                    android:layout_weight="2"
+                    android:layout_weight="1"
                     android:gravity="center"
                     android:padding="10dp"
                     android:textColor="#000000"
                     android:text="至" />
 
-                <Button
+
+
+            </LinearLayout>
+
+
+            <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                xmlns:tools="http://schemas.android.com/tools"
+                android:layout_width="match_parent"
+                android:layout_height="60dp"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+
+
+                <EditText
                     android:id="@+id/end_time"
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="40dip"
-                    android:layout_weight="4"
-                    android:text="截止时间" />
+                    android:gravity="center"
+                    android:editable="false"
+                    android:hint="截止时间" />
+
+
 
 
             </LinearLayout>
@@ -234,13 +250,8 @@
                 <EditText
                     android:id="@+id/real_apply_person"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_centerVertical="true"
-                    android:layout_marginLeft="10dip"
-                    android:layout_marginRight="10dip"
-
-                    android:background="@null"
-                    android:gravity="center_vertical"
+                    android:layout_height="40dip"
+                    android:gravity="center"
                     android:hint="申请人" />
 
 
@@ -264,41 +275,41 @@
                     android:textColor="#000000"
                     android:text="申请时间：" />
 
-                <Button
+                <EditText
                     android:id="@+id/apply_time"
                     android:layout_width="wrap_content"
                     android:layout_height="40dip"
-
-                    android:text="申请时间" />
+                    android:gravity="center"
+                    android:hint="申请时间" />
 
 
             </LinearLayout>
-    <LinearLayout
+            <LinearLayout
 
-        android:layout_width="match_parent"
-        android:layout_height="60dp"
+                android:layout_width="match_parent"
+                android:layout_height="60dp"
 
-        android:gravity="center_vertical">
+                android:gravity="center_vertical">
 
-        <TextView
-            android:id="@+id/kong"
-            android:layout_width="wrap_content"
-            android:layout_height="40dip"
-            android:layout_weight="9"
-            android:text=""
-            android:gravity="left"
-            android:padding="10dp"
-            />
-        <Button
-            android:id="@+id/leave_submit"
-            android:layout_width="wrap_content"
-            android:layout_height="40dp"
-            android:layout_weight="1"
-            android:text="提交"
-            />
+                <TextView
+                    android:id="@+id/kong"
+                    android:layout_width="wrap_content"
+                    android:layout_height="40dip"
+                    android:layout_weight="9"
+                    android:text=""
+                    android:gravity="left"
+                    android:padding="10dp"
+                    />
+                <Button
+                    android:id="@+id/leave_submit"
+                    android:layout_width="wrap_content"
+                    android:layout_height="40dp"
+                    android:layout_weight="1"
+                    android:text="提交"
+                    />
 
-    </LinearLayout>
             </LinearLayout>
+        </LinearLayout>
     </ScrollView>
 
 

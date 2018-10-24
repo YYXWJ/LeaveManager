@@ -13,7 +13,6 @@ import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.util.ArrayList;
 
 import leavemanager.example.com.leavemanager.MyApplication;
 import leavemanager.example.com.leavemanager.been.ApplyReceiveBeen;
@@ -21,33 +20,31 @@ import leavemanager.example.com.leavemanager.been.LoginBeen;
 import leavemanager.example.com.leavemanager.node.ReceiveLeaveInfo;
 
 public class PermitService {
-    private static String serverURL="http://118.190.83.62:8085";
+    private static String serverURL = "http://118.190.83.62:8085";
     //private static Handler loginHandler = MyApplication.hanlder;
+
     /**
      * 用户注册
      */
-    public static boolean permitLeaveInfo(final ReceiveLeaveInfo receiveLeaveInfo)
-    {
-        new Thread()
-        {
+    public static boolean permitLeaveInfo(final ReceiveLeaveInfo receiveLeaveInfo) {
+        new Thread() {
             @Override
-            public void run()
-            {
+            public void run() {
                 try {
                     JSONObject userJSON = new JSONObject();
-                    userJSON.put("applyPersons",receiveLeaveInfo.getApplyPersons());
-                    userJSON.put("startTime",receiveLeaveInfo.getStartTime());
-                    userJSON.put("endTime",receiveLeaveInfo.getEndTIme());
-                    userJSON.put("place",receiveLeaveInfo.getPlace());
-                    userJSON.put("event",receiveLeaveInfo.getEvent());
-                    userJSON.put("permitPerson",receiveLeaveInfo.getPermitPerson());
-                    userJSON.put("permitTime",receiveLeaveInfo.getPermitTime());
+                    userJSON.put("applyPersons", receiveLeaveInfo.getApplyPersons());
+                    userJSON.put("startTime", receiveLeaveInfo.getStartTime());
+                    userJSON.put("endTime", receiveLeaveInfo.getEndTIme());
+                    userJSON.put("place", receiveLeaveInfo.getPlace());
+                    userJSON.put("event", receiveLeaveInfo.getEvent());
+                    userJSON.put("permitPerson", receiveLeaveInfo.getPermitPerson());
+                    userJSON.put("permitTime", receiveLeaveInfo.getPermitTime());
                     String content = String.valueOf(userJSON);
                     /**
                      * 请求地址
                      */
                     //String url = serverURL+"/persion/login";
-                    String url ="http://10.103.241.30:8085/leaveinfo/creinfo";
+                    String url = "http://10.103.241.30:8085/leaveinfo/creinfo";
                     HttpURLConnection connection = (HttpURLConnection) new URL(url).openConnection();
                     connection.setConnectTimeout(5000);
                     connection.setRequestMethod("POST");
@@ -64,45 +61,48 @@ public class PermitService {
                     ApplyReceiveBeen applyReceiveBeen = null;
                     if (stat == 200) {
                         br = new BufferedReader(new InputStreamReader(connection.getInputStream()));
-                        applyReceiveBeen = formatData(br.readLine());
+                        //applyReceiveBeen = formatData(br.readLine());
                     } else {
-                        permitFailed();
+                        //permitFailed();
                         return;
                     }
-                    if(applyReceiveBeen.getCode() == 0){
-                        permitSuccessed(applyReceiveBeen);
+                    if (applyReceiveBeen.getCode() == 0) {
+                       // permitSuccessed(applyReceiveBeen);
                         return;
-                    }else{
-                        permitFailed();
-                        return;
+                    } else {
+                        //permitFailed();
+                        LoginBeen loginBeen = null;
+                        if (stat == 200) {
+                            br = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+                            loginBeen = formatData(br.readLine());
+                        } else {
+                            LoginFailed();
+                            return;
+                        }
+                        if (loginBeen.getCode() == 0) {
+                            LoginSuccessed(loginBeen);
+                            return;
+                        } else {
+                            LoginFailed();
+                            return;
+                        }
+                    }}catch(Exception e)
+                    {
+                        e.printStackTrace();
+                        //permitFailed();
                     }
-                }catch (Exception e)
-                {
-                    e.printStackTrace();
-                    permitFailed();
                 }
-            }
-        }.start();
+            }.start();
         return true;
+        }
+
+    private static LoginBeen formatData(String s) {
+        return null;
     }
 
-    private static ApplyReceiveBeen formatData(String msg) {
-        Gson gson = new Gson();
-//        ApplyReceiveBeen applyReceiveBeen = gson.fromJson(msg, ApplyReceiveBeen.class);
-//        Log.e("123","loginBeen--"+applyReceiveBeen.getMsg());
-//        Log.e("123","loginBeen--"+applyReceiveBeen.getCode());
-//        Object data = applyReceiveBeen.getData();
-        return gson.fromJson(msg, ApplyReceiveBeen.class);
+    private static void LoginFailed() {
     }
-    private static void permitFailed() {
-        Message msg = Message.obtain();
-        msg.what = MyApplication.PERMIT_FAIL;
-        MyApplication.hanlder.handleMessage(msg);
-    }
-    private static void permitSuccessed(ApplyReceiveBeen applyReceiveBeen) {
-        Message msg = Message.obtain();
-        msg.what = MyApplication.PERMIT_SUCCESS;
-        MyApplication.hanlder.handleMessage(msg);
 
+    private static void LoginSuccessed(LoginBeen loginBeen) {
     }
 }

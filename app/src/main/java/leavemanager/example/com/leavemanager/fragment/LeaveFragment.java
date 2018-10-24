@@ -3,7 +3,7 @@ package leavemanager.example.com.leavemanager.fragment;
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.app.Dialog;
-import android.app.Fragment;
+import android.support.v4.app.Fragment;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -39,9 +39,9 @@ import leavemanager.example.com.leavemanager.utils.http.PermitService;
 
 public class LeaveFragment extends Fragment {
     private final static String TAG = "LeaveFragment";
-    private Button selectStartTimeButton;
-    private Button selectEndTimeButton;
-    private Button selectApplyPerson;
+    private EditText selectStartTimeButton;
+    private EditText selectEndTimeButton;
+    private EditText selectApplyPerson;
     private EditText et_place;
     private EditText et_event;
 
@@ -76,7 +76,7 @@ public class LeaveFragment extends Fragment {
         selectApplyPerson.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(MyApplication.getLoginBeen().getData() == null){
+                if(MyApplication.getLoginBeen() == null){
                     return;
                 }
                 StringBuffer sb = new StringBuffer();
@@ -89,7 +89,28 @@ public class LeaveFragment extends Fragment {
                 }
                 sb.deleteCharAt(sb.length() - 1);
                 progressDialog = ProgressDialog.show(mContext, "请稍等...", "获取名单中...", true);
-                ApplyPersonsService.getApplyPersions(sb.toString());
+                ApplyPersonsService.getApplyPersions(sb.toString(), new ApplyPersonsService.CallBack() {
+                    @Override
+                    public void onSuccessed(final ApplyPersonBeen applyPersonBeen) {
+                        getActivity().runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                getApplyPersonsSuccess(applyPersonBeen);
+                            }
+                        });
+                    }
+
+                    @Override
+                    public void onFailed() {
+                        getApplyPersonsFail();
+                    }
+                });
+                getActivity().runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+
+                    }
+                });
                // DialogUtil.selectApplyPersions(mContext).show();
             }
         });
@@ -179,25 +200,25 @@ public class LeaveFragment extends Fragment {
                         int arrive_hour = timePicker.getCurrentHour();
                         int arrive_min = timePicker.getCurrentMinute();
                         String timeStr = DateUtil.formatTime(arrive_hour, arrive_min);
-                ((Button)v).setText(dateStr+timeStr);
+                ((EditText)v).setText(dateStr+timeStr);
 
             }
         });
         builder.show();
     }
-    public static void getApplyPersonsFail(){
+    public void getApplyPersonsFail(){
         if(progressDialog!=null){
             progressDialog.dismiss();
         }
         Toast.makeText(MyApplication.getApplication(),"获取名单失败，请重试",Toast.LENGTH_LONG).show();
     }
-    public static void getApplyPersonsSuccess(ApplyPersonBeen obj){
+    public void getApplyPersonsSuccess(ApplyPersonBeen obj){
         if(progressDialog!=null){
             progressDialog.dismiss();
         }
         selectApplyPersions(mContext,obj).show();
     }
-    public static Dialog selectApplyPersions(Context context, ApplyPersonBeen obj){
+    public Dialog selectApplyPersions(Context context, ApplyPersonBeen obj){
 
         final String items[] = new String[obj.getData().size()];
         final boolean selected[] = new boolean[obj.getData().size()];
@@ -227,6 +248,7 @@ public class LeaveFragment extends Fragment {
                 }
                 sb.deleteCharAt(sb.length() - 1);
                 //这里需要加一个刷新控件的逻辑
+                selectApplyPerson.setText(sb.toString());
                 dialog.dismiss();
 
             }

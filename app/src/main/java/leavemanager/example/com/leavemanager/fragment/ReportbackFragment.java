@@ -1,6 +1,8 @@
 package leavemanager.example.com.leavemanager.fragment;
 
-import android.app.Fragment;
+import android.annotation.SuppressLint;
+import android.content.Context;
+import android.support.v4.app.Fragment;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,6 +14,14 @@ import leavemanager.example.com.leavemanager.Constants;
 import leavemanager.example.com.leavemanager.R;
 
 public class ReportbackFragment extends Fragment {
+    private Context mContext;
+    public ReportbackFragment(){
+
+    }
+    @SuppressLint("ValidFragment")
+    public ReportbackFragment(Context context){
+        this.mContext = context;
+    }
     public static ReportbackFragment newInstance(String s){
         ReportbackFragment instence = new ReportbackFragment();
         Bundle bundle = new Bundle();

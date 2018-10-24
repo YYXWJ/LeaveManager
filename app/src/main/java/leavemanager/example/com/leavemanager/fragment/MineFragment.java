@@ -1,6 +1,8 @@
 package leavemanager.example.com.leavemanager.fragment;
 
-import android.app.Fragment;
+import android.annotation.SuppressLint;
+import android.content.Context;
+import android.support.v4.app.Fragment;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,7 +13,16 @@ import org.jetbrains.annotations.Nullable;
 import leavemanager.example.com.leavemanager.Constants;
 import leavemanager.example.com.leavemanager.R;
 
+@SuppressLint("ValidFragment")
 public class MineFragment extends Fragment {
+    @SuppressLint("ValidFragment")
+    private Context mContext;
+    public MineFragment(){
+
+    }
+    public MineFragment(Context context){
+        this.mContext = context;
+    }
     public static MineFragment newInstance(String s){
         MineFragment instence = new MineFragment();
         Bundle bundle = new Bundle();

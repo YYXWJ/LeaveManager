@@ -21,10 +21,15 @@ import leavemanager.example.com.leavemanager.been.ApplyPersonBeen;
 public class ApplyPersonsService {
     private static final String url = "http://192.168.1.102:8085/leaveinfo/validpersion";
     //private static Handler loginHandler = MyApplication.hanlder;
+    public interface CallBack{
+        void onSuccessed(ApplyPersonBeen applyPersonBeen);
+        void onFailed();
+    }
     /***
      * 获取申请人名单
      */
-    public static boolean getApplyPersions(final String Groups){
+
+    public static boolean getApplyPersions(final String Groups,final CallBack callBack){
         new Thread()
         {
             @Override
@@ -56,20 +61,24 @@ public class ApplyPersonsService {
                         br = new BufferedReader(new InputStreamReader(connection.getInputStream()));
                         applyPersonBeen = formatData(br.readLine());
                     } else {
-                        applyPersonFailed();
+                        //applyPersonFailed();
+                        callBack.onFailed();
                         return;
                     }
                     if(applyPersonBeen.getCode() == 0){
-                        applyPersonSuccessed(applyPersonBeen);
+                        //applyPersonSuccessed(applyPersonBeen);
+                        callBack.onSuccessed(applyPersonBeen);
                         return;
                     }else{
-                        applyPersonFailed();
+                        //applyPersonFailed();
+                        callBack.onFailed();
                         return;
                     }
                 }catch (Exception e)
                 {
                     e.printStackTrace();
-                    applyPersonFailed();
+                    //applyPersonFailed();
+                    callBack.onFailed();
                 }
             }
         }.start();

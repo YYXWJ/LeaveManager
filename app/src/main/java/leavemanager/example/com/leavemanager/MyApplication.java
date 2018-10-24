@@ -25,7 +25,6 @@ public class MyApplication extends Application {
     public final static int PERMIT_SUCCESS= 6;
 
     private static LoginBeen loginBeen = null;
-
     public static LoginBeen getLoginBeen(){
         if(loginBeen != null){
             return loginBeen;
@@ -51,17 +50,19 @@ public class MyApplication extends Application {
             Looper.prepare();
             switch (msg.what) {
                 case LOGIN_FAIL://登录失败
-                    LoginActivity.loginFail();
+                    //LoginActivity.loginFail();
+                    //test
+                    LoginActivity.loginSuccess();
                     break;
                 case LOGIN_SUCCESS://登录成功
                     loginBeen = (LoginBeen)msg.obj;
                     LoginActivity.loginSuccess();
                     break;
                 case APPLYPERSON_FAIL:
-                    LeaveFragment.getApplyPersonsFail();
+                    //LeaveFragment.getApplyPersonsFail();
                     break;
                 case APPLYPERSON_SUCCESS:
-                    LeaveFragment.getApplyPersonsSuccess((ApplyPersonBeen)msg.obj);
+                    //LeaveFragment.getApplyPersonsSuccess((ApplyPersonBeen)msg.obj);
                     break;
                 case PERMIT_FAIL:
                     break;
