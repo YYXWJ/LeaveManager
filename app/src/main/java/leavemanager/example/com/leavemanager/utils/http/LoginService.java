@@ -19,13 +19,14 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
 
+import leavemanager.example.com.leavemanager.Constants;
 import leavemanager.example.com.leavemanager.MyApplication;
 import leavemanager.example.com.leavemanager.activity.LoginActivity;
 import leavemanager.example.com.leavemanager.been.LoginBeen;
 import leavemanager.example.com.leavemanager.node.UserInfo;
 
 public class LoginService {
-    private static String serverURL="http://118.190.83.62:8085";
+    private static String url= Constants.serverURL+"/persion/login";
     //private static Handler loginHandler = MyApplication.hanlder;
     /**
      * 用户注册
@@ -46,7 +47,7 @@ public class LoginService {
                      * 请求地址
                      */
                     //String url = serverURL+"/persion/login";
-                    String url ="http://10.103.241.30:8085/persion/login";
+                    //String url ="http://10.103.241.30:8085/persion/login";
                     HttpURLConnection connection = (HttpURLConnection) new URL(url).openConnection();
                     connection.setConnectTimeout(5000);
                     connection.setRequestMethod("POST");

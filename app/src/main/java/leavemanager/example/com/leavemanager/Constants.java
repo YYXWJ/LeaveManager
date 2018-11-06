@@ -2,5 +2,5 @@ package leavemanager.example.com.leavemanager;
 
 public class Constants {
     public static final String ARGS = "args";
-    public static final String serverURL = "";
+    public static final String serverURL = "http://10.103.241.30:8085";
 }

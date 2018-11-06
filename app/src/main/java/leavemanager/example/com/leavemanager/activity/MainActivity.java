@@ -182,7 +182,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        BottomBar bottomBar= (BottomBar) findViewById(R.id.bottom_bar);
+        BottomBar bottomBar = (BottomBar) findViewById(R.id.bottom_bar);
 
         bottomBar.setContainer(R.id.fl_container)
                 .setTitleBeforeAndAfterColor("#999999", "#077ff7")
@@ -205,9 +205,10 @@ public class MainActivity extends AppCompatActivity {
 
                 .build();
     }
+
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
-        if(keyCode == KeyEvent.KEYCODE_BACK){
+        if (keyCode == KeyEvent.KEYCODE_BACK) {
             AlertDialog.Builder builder = new AlertDialog.Builder(this);
             builder.setMessage("确定要退出吗？")
                     .setCancelable(false)

@@ -29,10 +29,11 @@ import leavemanager.example.com.leavemanager.MyApplication;
 import leavemanager.example.com.leavemanager.R;
 import leavemanager.example.com.leavemanager.been.ApplyPersonBeen;
 import leavemanager.example.com.leavemanager.been.LoginBeen;
+import leavemanager.example.com.leavemanager.node.LeaveInfo;
 import leavemanager.example.com.leavemanager.node.ReceiveLeaveInfo;
 import leavemanager.example.com.leavemanager.utils.DateUtil;
 import leavemanager.example.com.leavemanager.utils.http.ApplyPersonsService;
-import leavemanager.example.com.leavemanager.utils.http.PermitService;
+import leavemanager.example.com.leavemanager.utils.http.LeaveService;
 
 
 public class LeaveFragment extends Fragment {
@@ -45,7 +46,24 @@ public class LeaveFragment extends Fragment {
     private EditText et_real_apply_person;
     private EditText et_now_time;
     private Button sendButton;
+    private String persionid;
+    private String applicantid;
 
+    public String getApplicantid() {
+        return applicantid;
+    }
+
+    public void setApplicantid(String applicantid) {
+        this.applicantid = applicantid;
+    }
+
+    public String getPersionid() {
+        return persionid;
+    }
+
+    public void setPersionid(String persionid) {
+        this.persionid = persionid;
+    }
     private static Context mContext;
     private static ProgressDialog progressDialog = null;
     public LeaveFragment(){
@@ -65,6 +83,7 @@ public class LeaveFragment extends Fragment {
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
+        //带人请假这个还没加
         View view = inflater.inflate(R.layout.fragment_leave, container, false);
         et_selectStartTime = view.findViewById(R.id.start_time);
         et_selectEndTime = view.findViewById(R.id.end_time);
@@ -73,15 +92,56 @@ public class LeaveFragment extends Fragment {
         et_event = view.findViewById(R.id.event);
         sendButton = view.findViewById(R.id.leave_submit);
         et_real_apply_person = view.findViewById(R.id.real_apply_person);
-        et_real_apply_person.setEnabled(false);
-        et_real_apply_person.setFocusable(false);
-        et_real_apply_person.setKeyListener(null);
-        et_real_apply_person.setText(MyApplication.getLoginBeen().getData().get(0).getName());
         et_now_time = view.findViewById(R.id.apply_time);
+        initView();
+//        et_real_apply_person.setEnabled(false);
+//        et_real_apply_person.setFocusable(false);
+        et_real_apply_person.setKeyListener(null);
+        et_real_apply_person.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(MyApplication.getLoginBeen() == null){
+                    return;
+                }
+                StringBuffer sb = new StringBuffer();
+
+                for(LoginBeen.person p: MyApplication.getLoginBeen().getData()){
+                    if(p.getTyping().equals("A")){
+                        sb.append(p.getGroupid());
+                        sb.append(";");
+                    }
+                }
+                sb.deleteCharAt(sb.length() - 1);
+                progressDialog = ProgressDialog.show(mContext, "请稍等...", "获取名单中...", true);
+                ApplyPersonsService.getApplyPersions(sb.toString(), new ApplyPersonsService.CallBack() {
+                    @Override
+                    public void onSuccessed(final ApplyPersonBeen applyPersonBeen) {
+                        getActivity().runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                getRealApplyPersonSuccess(applyPersonBeen);
+                            }
+                        });
+                    }
+
+                    @Override
+                    public void onFailed() {
+                        getActivity().runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                getApplyPersonsFail();
+                            }
+                        });
+                    }
+                });
+            }
+        });
+
+
         et_now_time.setEnabled(false);
         et_now_time.setFocusable(false);
         et_now_time.setKeyListener(null);
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy年MM月dd日 HH:mm:ss");
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH-mm");
         Date date = new Date(System.currentTimeMillis());
         et_now_time.setText(simpleDateFormat.format(date));
         et_selectApplyPerson.setOnClickListener(new View.OnClickListener() {
@@ -121,13 +181,6 @@ public class LeaveFragment extends Fragment {
                         });
                     }
                 });
-                getActivity().runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-
-                    }
-                });
-               // DialogUtil.selectApplyPersions(mContext).show();
             }
         });
         et_selectStartTime.setOnClickListener(new View.OnClickListener() {
@@ -154,23 +207,28 @@ public class LeaveFragment extends Fragment {
                     Toast.makeText(getContext(),"假条信息不全,请补充请假信息",Toast.LENGTH_LONG).show();
                     return;
                 }
-                ReceiveLeaveInfo receiveLeaveInfo = new ReceiveLeaveInfo();
-                receiveLeaveInfo.setApplyPersons(et_selectApplyPerson.getText().toString());
-                receiveLeaveInfo.setStartTime(et_selectStartTime.getText().toString());
-                receiveLeaveInfo.setEndTIme(et_selectEndTime.getText().toString());
-                receiveLeaveInfo.setPlace(et_place.getText().toString());
-                receiveLeaveInfo.setEvent(et_event.getText().toString());
-                receiveLeaveInfo.setPermitTime(et_now_time.getText().toString());
-                receiveLeaveInfo.setPermitPerson(et_real_apply_person.getText().toString());
-                PermitService.permitLeaveInfo(receiveLeaveInfo, new PermitService.CallBack() {
+                LeaveInfo leaveInfo = new LeaveInfo();
+                leaveInfo.setApplicantName(et_selectApplyPerson.getText().toString());
+                leaveInfo.setApplicantid(getPersionid());
+                leaveInfo.setFromdate(et_selectStartTime.getText().toString());
+                leaveInfo.setTodate(et_selectEndTime.getText().toString());
+                leaveInfo.setLeavesite(et_place.getText().toString());
+                leaveInfo.setLeaveevent(et_event.getText().toString());
+                leaveInfo.setSubmitdate(et_now_time.getText().toString());
+                leaveInfo.setPersionid(getPersionid());
+                leaveInfo.setPersionName(et_real_apply_person.getText().toString());
+                leaveInfo.setSubmitid(MyApplication.getLoginBeen().getData().get(0).getId()+"");
+                LeaveService.permitLeaveInfo(leaveInfo, new LeaveService.CallBack() {
                     @Override
                     public void onSuccessed() {
                         getActivity().runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
                                 Toast.makeText(getContext(),"提交成功",Toast.LENGTH_LONG).show();
+                                initView();
                             }
                         });
+
                     }
 
                     @Override
@@ -187,6 +245,73 @@ public class LeaveFragment extends Fragment {
         });
         return view;
         //return super.onCreateView(inflater, container, savedInstanceState);
+    }
+    private void initView(){
+        et_selectStartTime.setText("");
+        et_selectEndTime.setText("");
+        et_selectApplyPerson.setText("");
+        et_place.setText("");
+        et_event.setText("");
+        et_real_apply_person.setText("");
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH-mm");
+        Date date = new Date(System.currentTimeMillis());
+        et_now_time.setText(simpleDateFormat.format(date));
+    }
+    private void getRealApplyPersonSuccess(ApplyPersonBeen applyPersonBeen) {
+        if(progressDialog!=null){
+            progressDialog.dismiss();
+        }
+        selectRealApplyPersions(mContext,applyPersonBeen).show();
+    }
+
+    private Dialog selectRealApplyPersions(Context mContext, ApplyPersonBeen obj) {
+        final String items[] = new String[obj.getData().size()];
+        final int ids[] = new int[obj.getData().size()];
+        final boolean selected[] = new boolean[obj.getData().size()];
+        int i = 0;
+        for(ApplyPersonBeen.person p : obj.getData()){
+            items[i] = p.getName();
+            ids[i] = p.getId();
+            selected[i++] = false;
+        }
+        final AlertDialog.Builder builder = new AlertDialog.Builder(mContext,3);
+        builder.setTitle("请选择申请人");
+        builder.setIcon(R.mipmap.ic_launcher);
+        builder.setSingleChoiceItems(items, 0,
+                new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        if(ids[which] == MyApplication.getLoginBeen().getData().get(0).getId()){
+                            et_real_apply_person.setText(items[which]);
+                            setPersionid(ids[which]+"");
+                        }else{
+                            et_real_apply_person.setText(items[which]+"(代"+MyApplication.getLoginBeen().getData().get(0).getName()+")");
+                            setPersionid(ids[which]+";"+MyApplication.getLoginBeen().getData().get(0).getId());
+                        }
+                        dialog.dismiss();
+                    }
+                });
+//        builder.setPositiveButton("确定", new DialogInterface.OnClickListener() {
+//            @Override
+//            public void onClick(DialogInterface dialog, int which) {
+//                StringBuffer sb = new StringBuffer();
+//                StringBuffer id = new StringBuffer();
+//                for (int i = 0; i < selected.length; i++) {
+//                    if(selected[i]==true){
+//                        sb.append(items[i]);
+//                        sb.append(";");
+//                        id.append(ids[i]+"");
+//                        id.append(";");
+//                    }
+//                }
+//                sb.deleteCharAt(sb.length() - 1);
+//                setPersionid(id.toString());
+//                et_selectApplyPerson.setText(sb.toString());
+//                dialog.dismiss();
+//
+//            }
+//        });
+        return builder.create();
     }
 
     private void buildSelectTimeDialog(final View v) {
@@ -272,10 +397,12 @@ public class LeaveFragment extends Fragment {
     public Dialog selectApplyPersions(Context context, ApplyPersonBeen obj){
 
         final String items[] = new String[obj.getData().size()];
+        final int ids[] = new int[obj.getData().size()];
         final boolean selected[] = new boolean[obj.getData().size()];
         int i = 0;
         for(ApplyPersonBeen.person p : obj.getData()){
             items[i] = p.getName();
+            ids[i] = p.getId();
             selected[i++] = false;
         }
         final AlertDialog.Builder builder = new AlertDialog.Builder(context,3);
@@ -293,13 +420,17 @@ public class LeaveFragment extends Fragment {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 StringBuffer sb = new StringBuffer();
+                StringBuffer id = new StringBuffer();
                 for (int i = 0; i < selected.length; i++) {
                     if(selected[i]==true){
                         sb.append(items[i]);
-                        sb.append(",");
+                        sb.append(";");
+                        id.append(ids[i]+"");
+                        id.append(";");
                     }
                 }
                 sb.deleteCharAt(sb.length() - 1);
+                setPersionid(id.toString());
                 et_selectApplyPerson.setText(sb.toString());
                 dialog.dismiss();
 

@@ -7,6 +7,8 @@ public class LeaveInfo {
 
     private String persionid;      //登陆人员ID
 
+    private String persionName;    //填写请假单时，终端登陆人员名字
+
     private String fromdate;       //休假开始日期
 
     private String todate;          //休假结束日期
@@ -15,13 +17,19 @@ public class LeaveInfo {
 
     private String applicantid;     //请假人
 
+    private String applicantName;   //请假人名字，使用；隔开，与id对应
+
     private String submitid;        //填写请假单子的人
+
+    private String submitName;        //填写请假单的人，不一定是当前用户
 
     private String submitdate;      //填写请假单子的日期
 
     private String approveid;       //批准人
 
-    //  @JsonFormat(pattern = "yyyy-MM-dd HH-mm-ss")
+    private String approveName;     //批准人的名字
+
+    //  @JsonFormat(pattern = "yyyy-MM-dd HH-mm")
     private String approvedata;     //批准日期
 
     private String returndate;      //返回营区大门日期
@@ -265,6 +273,45 @@ public class LeaveInfo {
     public void setLeaveevent(String leaveevent){
 
         this.leaveevent = leaveevent;
+    }
+    public String getPersionName() {
+        return persionName;
+    }
+
+    public void setPersionName(String persionName) {
+        this.persionName = persionName;
+    }
+
+    public String getApplicantName() {
+        return applicantName;
+    }
+
+    public void setApplicantName(String applicantName) {
+        this.applicantName = applicantName;
+    }
+
+    public String getSubmitName() {
+        return submitName;
+    }
+
+    public void setSubmitName(String submitName) {
+        this.submitName = submitName;
+    }
+
+    public String getApproveName() {
+        return approveName;
+    }
+
+    public void setApproveName(String approveName) {
+        this.approveName = approveName;
+    }
+
+    public String getOutdated() {
+        return outdated;
+    }
+
+    public void setOutdated(String outdated) {
+        this.outdated = outdated;
     }
 
 }

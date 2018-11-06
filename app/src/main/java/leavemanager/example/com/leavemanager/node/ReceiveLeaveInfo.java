@@ -9,6 +9,15 @@ public class ReceiveLeaveInfo {
     private String event;
     private String permitPerson;
     private String permitTime;
+    private String applicantId;
+
+    public String getApplicantId() {
+        return applicantId;
+    }
+
+    public void setApplicantId(String applicantId) {
+        this.applicantId = applicantId;
+    }
 
     public String getApplyPersons() {
         return applyPersons;

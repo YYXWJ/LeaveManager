@@ -50,9 +50,9 @@ public class MyApplication extends Application {
             Looper.prepare();
             switch (msg.what) {
                 case LOGIN_FAIL://登录失败
-                    //LoginActivity.loginFail();
+                    LoginActivity.loginFail();
                     //test
-                    LoginActivity.loginSuccess();
+                    //LoginActivity.loginSuccess();
                     break;
                 case LOGIN_SUCCESS://登录成功
                     loginBeen = (LoginBeen)msg.obj;

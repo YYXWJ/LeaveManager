@@ -1,9 +1,5 @@
 package leavemanager.example.com.leavemanager.utils.http;
 
-import android.os.Handler;
-import android.os.Message;
-import android.util.Log;
-
 import com.google.gson.Gson;
 
 import org.json.JSONException;
@@ -14,36 +10,36 @@ import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.ArrayList;
 
 import leavemanager.example.com.leavemanager.Constants;
 import leavemanager.example.com.leavemanager.MyApplication;
 import leavemanager.example.com.leavemanager.been.ApplyPersonBeen;
+import leavemanager.example.com.leavemanager.been.ApplyReceiveBeen;
+import leavemanager.example.com.leavemanager.been.LeavePermitBeen;
+import leavemanager.example.com.leavemanager.been.LoginBeen;
+import leavemanager.example.com.leavemanager.node.LeaveInfo;
 
-public class ApplyPersonsService {
-    private static final String url = Constants.serverURL+"/leaveinfo/validpersion";
-    //private static Handler loginHandler = MyApplication.hanlder;
+public class GetPermitService {
+    private static String url = Constants.serverURL+"/leaveinfo/getleavenumber";
     public interface CallBack{
-        void onSuccessed(ApplyPersonBeen applyPersonBeen);
+        void onSuccessed(LeavePermitBeen leavePermitBeen);
         void onFailed();
     }
-    /***
-     * 获取申请人名单
-     */
-
-    public static boolean getApplyPersions(final String Groups,final CallBack callBack){
-        new Thread()
-        {
+    public static boolean getPermitLeaveInfo(final CallBack callBack){
+        new Thread() {
             @Override
-            public void run()
-            {
+            public void run() {
                 try {
                     JSONObject userJSON = new JSONObject();
-                    userJSON.put("groupid",Groups);
+                    //userJSON.put("id", MyApplication.getLoginBeen().getData().get(0).getId()+"");
+                    userJSON.put("id", "100000006");
                     String content = String.valueOf(userJSON);
                     /**
                      * 请求地址
                      */
                     //String url = serverURL+"/persion/login";
+                    //String url = "http://10.103.241.30:8085/leaveinfo/creinfo";
                     HttpURLConnection connection = (HttpURLConnection) new URL(url).openConnection();
                     connection.setConnectTimeout(5000);
                     connection.setRequestMethod("POST");
@@ -57,56 +53,42 @@ public class ApplyPersonsService {
                     connection.connect();
                     int stat = connection.getResponseCode();
                     BufferedReader br = null;
-                    ApplyPersonBeen applyPersonBeen = null;
+                    //ApplyReceiveBeen applyReceiveBeen = null;
+                    //permitFailed();
+                    LeavePermitBeen leavePermitBeen = null;
                     if (stat == 200) {
                         br = new BufferedReader(new InputStreamReader(connection.getInputStream()));
-                        applyPersonBeen = formatData(br.readLine());
+                        leavePermitBeen = formatData(br.readLine());
                     } else {
-                        //applyPersonFailed();
+                        //LoginFailed();
                         callBack.onFailed();
                         return;
                     }
-                    if(applyPersonBeen.getCode() == 0){
-                        //applyPersonSuccessed(applyPersonBeen);
-                        callBack.onSuccessed(applyPersonBeen);
+                    if (leavePermitBeen.getCode() == 0) {
+                        //LoginSuccessed(loginBeen);
+                        callBack.onSuccessed(leavePermitBeen);
                         return;
-                    }else{
-                        //applyPersonFailed();
+                    } else {
+                        //LoginFailed();
                         callBack.onFailed();
                         return;
                     }
-                }catch (Exception e)
+                }catch(Exception e)
                 {
                     e.printStackTrace();
-                    //applyPersonFailed();
+                    //permitFailed();
                     callBack.onFailed();
                 }
             }
         }.start();
         return true;
     }
-    private static void applyPersonFailed() {
-        Message msg = Message.obtain();
-        msg.what = MyApplication.APPLYPERSON_FAIL;
-        MyApplication.hanlder.handleMessage(msg);
-    }
-    private static void applyPersonSuccessed(ApplyPersonBeen applyPersonBeen) {
-        Message msg = Message.obtain();
-        msg.what = MyApplication.APPLYPERSON_SUCCESS;
-        msg.obj = applyPersonBeen;
-        MyApplication.hanlder.handleMessage(msg);
-    }
-    public static ApplyPersonBeen formatData(String msg) throws JSONException {
+    public static LeavePermitBeen formatData(String msg) {
         Gson gson = new Gson();
-        ApplyPersonBeen applyPersionBeen = gson.fromJson(msg, ApplyPersonBeen.class);
-//        Log.e("123","loginBeen--"+applyPersionBeen.getMsg());
-//        Log.e("123","loginBeen--"+applyPersionBeen.getCode());
-//        ArrayList<ApplyPersionBeen.persion> data = applyPersionBeen.getData();
-//        for(ApplyPersionBeen.persion p:data){
-//            Log.e("123","data--"+p.toString());
-//        }
-        return gson.fromJson(msg, ApplyPersonBeen.class);
+//        LeavePermitBeen leavePermitBeen = gson.fromJson(msg, LeavePermitBeen.class);
+//        ArrayList<LeaveInfo> leaveInfos = leavePermitBeen.getData();
+//        for(int i = 0;i < le)
+        return gson.fromJson(msg, LeavePermitBeen.class);
 
     }
-
 }
