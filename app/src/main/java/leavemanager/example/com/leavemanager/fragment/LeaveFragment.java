@@ -404,6 +404,7 @@ public class LeaveFragment extends Fragment {
                         int arrive_min = timePicker.getCurrentMinute();
                         String timeStr = DateUtil.formatTime(arrive_hour, arrive_min);
                 ((EditText)v).setText(dateStr+" "+timeStr);
+                Log.e(TAG,dateStr+" "+timeStr);
 
             }
         });

@@ -163,8 +163,6 @@ public class PermitFragment extends Fragment{
                     @Override
                     public void run() {
                         progressDialog.dismiss();
-                        loadData(null);
-
                         Toast.makeText(getContext(),"获取假条失败",Toast.LENGTH_LONG).show();
                     }
                 });
@@ -176,13 +174,11 @@ public class PermitFragment extends Fragment{
     private void loadData(final LeavePermitBeen leavePermitBeen) {
         List<Object> list = new ArrayList<>();
         ArrayList<LeaveInfo> leaveInfos = leavePermitBeen.getData();
-        if(leaveInfos == null){
+        if(leaveInfos == null || leaveInfos.size() == 0){
             getActivity().runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
                     progressDialog.dismiss();
-                    loadData(null);
-
                     Toast.makeText(getContext(),"没有可批假条",Toast.LENGTH_LONG).show();
                 }
             });

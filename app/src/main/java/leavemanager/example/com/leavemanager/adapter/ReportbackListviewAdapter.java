@@ -25,6 +25,7 @@ import leavemanager.example.com.leavemanager.MyApplication;
 import leavemanager.example.com.leavemanager.R;
 import leavemanager.example.com.leavemanager.been.LeavePermitItem;
 import leavemanager.example.com.leavemanager.node.LeaveInfo;
+import leavemanager.example.com.leavemanager.utils.DateUtil;
 import leavemanager.example.com.leavemanager.utils.http.SendPermitService;
 import leavemanager.example.com.leavemanager.utils.http.SendReportbackService;
 
@@ -68,6 +69,22 @@ public class ReportbackListviewAdapter extends RecyclerView.Adapter<RecyclerView
             final LeavePermitVH vh = (LeavePermitVH) holder;
             final LeavePermitItem data = (LeavePermitItem) mList.get(position);
             vh.mTitleTv.setText(data.title);
+            StringBuffer sb = new StringBuffer();
+            sb.append("    ");
+            sb.append(data.info.getName().replace(";",","));
+            sb.append("拟于");
+            String fromdata= DateUtil.formatShowDate(data.info.getFromdate());
+            sb.append(fromdata);
+            sb.append("至");
+            String todata= DateUtil.formatShowDate(data.info.getTodate());
+            sb.append(todata);
+            sb.append("到");
+            sb.append(data.info.getLeavesite());
+            sb.append("办理");
+            sb.append(data.info.getLeaveevent());
+            sb.append("事宜,请批准!");
+
+            vh.mContentTv.setText(sb.toString());
 //            vh.mNameTv.setText(data.info.getApplicantName());
 //            vh.mTimeTv.setText(data.info.getFromdate()+"---"+data.info.getTodate());
 //            vh.mEventTv.setText(data.info.getLeaveevent());
@@ -82,12 +99,13 @@ public class ReportbackListviewAdapter extends RecyclerView.Adapter<RecyclerView
 //                        mOnViewClick.onViewClick(data);
 //                    }
                     LeaveInfo leaveInfo = (LeaveInfo)data.extra;
-                    leaveInfo.setApproveid(MyApplication.getLoginBeen().getData().get(0).getName());
+                    //leaveInfo.setApproveid(MyApplication.getLoginBeen().getData().get(0).getName());
                     //SimpleDateFormat formatter   =   new   SimpleDateFormat   ("yyyy年MM月dd日   HH:mm:ss");
-                    SimpleDateFormat formatter   =   new   SimpleDateFormat   ("yyyy年MM月dd日");
+                    SimpleDateFormat formatter   =   new   SimpleDateFormat   ("yyyyMMddHHmm");
                     Date date = new Date(System.currentTimeMillis());
-                    leaveInfo.setApprovedata(formatter.format(date));
-                    leaveInfo.setStatus("4");
+                    leaveInfo.setEnddate(formatter.format(date));
+                    leaveInfo.setEndpersion(MyApplication.getLoginBeen().getData().get(0).getPersionid());
+                    leaveInfo.setStatus("2");
                     SendReportbackService.SendReportbackLeaveInfo(leaveInfo, new SendReportbackService.CallBack() {
                         @Override
                         public void onSuccessed() {
@@ -167,12 +185,13 @@ public class ReportbackListviewAdapter extends RecyclerView.Adapter<RecyclerView
 
         private TextView mTitleTv;
         private View mDescContainer;
-        private TextView mNameTv;
-        private TextView mTimeTv;
-        private TextView mPlaceTv;
-        private TextView mEventTv;
-        private TextView mPermitNameTv;
-        private TextView mPermitTimeTv;
+        private TextView mContentTv;
+//        private TextView mNameTv;
+//        private TextView mTimeTv;
+//        private TextView mPlaceTv;
+//        private TextView mEventTv;
+//        private TextView mPermitNameTv;
+//        private TextView mPermitTimeTv;
         private LinearLayout mLinearLayout;
         private Button mReportbackBn;
         //private
@@ -180,12 +199,13 @@ public class ReportbackListviewAdapter extends RecyclerView.Adapter<RecyclerView
             super(itemView);
             mTitleTv = itemView.findViewById(R.id.tv_title);
             mDescContainer = itemView.findViewById(R.id.ll_desc);
-            mNameTv = itemView.findViewById(R.id.tv_name);
-            mTimeTv = itemView.findViewById(R.id.tv_time);
-            mEventTv = itemView.findViewById(R.id.tv_event);
-            mPlaceTv = itemView.findViewById(R.id.tv_place);
-            mPermitNameTv = itemView.findViewById(R.id.tv_permitname);
-            mPermitTimeTv = itemView.findViewById(R.id.tv_permittime);
+            mContentTv = itemView.findViewById(R.id.tv_content);
+//            mNameTv = itemView.findViewById(R.id.tv_name);
+//            mTimeTv = itemView.findViewById(R.id.tv_time);
+//            mEventTv = itemView.findViewById(R.id.tv_event);
+//            mPlaceTv = itemView.findViewById(R.id.tv_place);
+//            mPermitNameTv = itemView.findViewById(R.id.tv_permitname);
+//            mPermitTimeTv = itemView.findViewById(R.id.tv_permittime);
             mLinearLayout = itemView.findViewById(R.id.ll_rb_item);
             mReportbackBn = itemView.findViewById(R.id.bn_reportback);
         }

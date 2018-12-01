@@ -32,7 +32,7 @@ public class GetPermitService {
             public void run() {
                 try {
                     JSONObject userJSON = new JSONObject();
-                    userJSON.put("id", MyApplication.getLoginBeen().getData().get(0).getPersionid()+"");
+                    userJSON.put("persionid", MyApplication.getLoginBeen().getData().get(0).getPersionid()+"");
                     //userJSON.put("id", "100000006");
                     String content = String.valueOf(userJSON);
                     /**
@@ -70,7 +70,11 @@ public class GetPermitService {
                         return;
                     } else {
                         //LoginFailed();
-                        callBack.onFailed();
+                        if(leavePermitBeen.getMsg().equals("数据为空！")){
+                            callBack.onSuccessed(leavePermitBeen);
+                        }else{
+                            callBack.onFailed();
+                        }
                         return;
                     }
                 }catch(Exception e)

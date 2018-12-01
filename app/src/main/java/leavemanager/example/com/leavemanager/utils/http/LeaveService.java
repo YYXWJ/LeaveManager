@@ -75,8 +75,9 @@ public class LeaveService {
                         //LoginSuccessed(loginBeen);
                         if("success".equals(sendLeaveInfoBeen.getData())){
                             callBack.onSuccessed();
+                        }else{
+                            callBack.onFailed();
                         }
-                        callBack.onFailed();
                         return;
                     } else {
                         //LoginFailed();

@@ -64,7 +64,7 @@ public class LeaveInfo {
 
     private String note;
 
-    private String relleaveid;//代请假人
+    private String relleaveid;
 
     private String relleavename;
 

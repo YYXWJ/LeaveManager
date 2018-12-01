@@ -21,6 +21,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import leavemanager.example.com.leavemanager.Constants;
+import leavemanager.example.com.leavemanager.MyApplication;
 import leavemanager.example.com.leavemanager.R;
 import leavemanager.example.com.leavemanager.adapter.ReportbackListviewAdapter;
 import leavemanager.example.com.leavemanager.been.LeavePermitBeen;
@@ -59,10 +60,10 @@ public class ReportbackFragment extends Fragment {
             GetReportbackService.getReportbackLeaveInfo(new GetPermitService.CallBack() {
                 @Override
                 public void onSuccessed(final LeavePermitBeen leavePermitBeen) {
-                    progressDialog.dismiss();
                     getActivity().runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
+                            progressDialog.dismiss();
                             loadData(leavePermitBeen);
                         }
                     });
@@ -71,10 +72,10 @@ public class ReportbackFragment extends Fragment {
 
                 @Override
                 public void onFailed() {
-                    progressDialog.dismiss();
                     getActivity().runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
+                            progressDialog.dismiss();
                             Toast.makeText(getContext(),"获取假条失败",Toast.LENGTH_LONG).show();
 
                         }
@@ -129,10 +130,24 @@ public class ReportbackFragment extends Fragment {
     private void loadData(LeavePermitBeen leavePermitBeen) {
         List<Object> list = new ArrayList<>();
         ArrayList<LeaveInfo> leaveInfos = leavePermitBeen.getData();
-        list.add("请假条");
-        for (int i = 0; i < leaveInfos.size(); i++) {
+        list.add("我的请假条");
+        int i =0;
+        for (; i < leaveInfos.size(); i++) {
+            if(leaveInfos.get(i).getApplicantid().contains(MyApplication.getLoginBeen().getData().get(0).getPersionid())) {
+                LeavePermitItem item = new LeavePermitItem();
+                item.title = "申请人:" + leaveInfos.get(i).getName().replace(";", " ");
+                LeaveInfo info = leaveInfos.get(i);
+                item.info = info;
+                item.extra = leaveInfos.get(i);
+                list.add(item);
+            }else{
+                break;
+            }
+        }
+        list.add("他人的请假条");
+        for(;i<leaveInfos.size();i++){
             LeavePermitItem item = new LeavePermitItem();
-            item.title = "申请人:"+leaveInfos.get(i).getName();
+            item.title = "申请人:" + leaveInfos.get(i).getName().replace(";", " ");
             LeaveInfo info = leaveInfos.get(i);
             item.info = info;
             item.extra = leaveInfos.get(i);

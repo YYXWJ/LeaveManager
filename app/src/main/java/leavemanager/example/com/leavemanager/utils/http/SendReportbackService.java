@@ -1,5 +1,7 @@
 package leavemanager.example.com.leavemanager.utils.http;
 
+import android.util.Log;
+
 import com.google.gson.Gson;
 
 import org.json.JSONObject;
@@ -17,7 +19,7 @@ import leavemanager.example.com.leavemanager.node.LeaveInfo;
 import leavemanager.example.com.leavemanager.utils.JsonUtil;
 
 public class SendReportbackService {
-    private static String url = Constants.serverURL+"/leaveinfo/updaterunningleave";
+    private static String url = Constants.serverURL+"/m/leaveinfo/updaterunningleave";
 
     public interface CallBack{
         void onSuccessed();
@@ -33,6 +35,7 @@ public class SendReportbackService {
                     /**
                      * 请求地址
                      */
+                    Log.e("Ser","content----"+content);
                     HttpURLConnection connection = (HttpURLConnection) new URL(url).openConnection();
                     connection.setConnectTimeout(5000);
                     connection.setRequestMethod("POST");

@@ -15,7 +15,7 @@ import leavemanager.example.com.leavemanager.MyApplication;
 import leavemanager.example.com.leavemanager.been.LeavePermitBeen;
 
 public class GetReportbackService {
-    private static String url = Constants.serverURL+"/leaveinfo/runningleave";//这里需要改
+    private static String url = Constants.serverURL+"/m/leaveinfo/runningleave";//这里需要改
     public interface CallBack{
         void onSuccessed();
         void onFailed();
@@ -26,7 +26,7 @@ public class GetReportbackService {
             public void run() {
                 try {
                     JSONObject userJSON = new JSONObject();
-                    userJSON.put("id", MyApplication.getLoginBeen().getData().get(0).getGroupid()+"");
+                    userJSON.put("id", MyApplication.getLoginBeen().getData().get(0).getPersionid()+"");
                     //userJSON.put("id", "100000006");
                     String content = String.valueOf(userJSON);
                     /**
@@ -64,7 +64,11 @@ public class GetReportbackService {
                         return;
                     } else {
                         //LoginFailed();
-                        callBack.onFailed();
+                        if(leavePermitBeen.getMsg().equals("数据为空！")){
+                            callBack.onSuccessed(leavePermitBeen);
+                        }else{
+                            callBack.onFailed();
+                        }
                         return;
                     }
                 }catch(Exception e)
