@@ -1,64 +1,120 @@
 package leavemanager.example.com.leavemanager.node;
 
+
+
 public class LeaveInfo {
     private Long id;
 
-    private String sheetno;         //请假单号
+    private String qjrs;   //填的请假人
 
-    private String persionid;      //登陆人员ID
+    private String name;   //请假人
 
-    private String persionName;    //填写请假单时，终端登陆人员名字
+    private String sheetno;
 
-    private String fromdate;       //休假开始日期
+    private String persionid;
 
-    private String todate;          //休假结束日期
+    private String fromdate;
 
-    private String leavesite;       //休假地点
+    private String todate;
 
-    private String applicantid;     //请假人
+    private String leavesite;
 
-    private String applicantName;   //请假人名字，使用；隔开，与id对应
+    private String applicantid;//填写假单的人
 
-    private String submitid;        //填写请假单子的人
+    private String applicantname;
 
-    private String submitName;        //填写请假单的人，不一定是当前用户
+    private String userid;
 
-    private String submitdate;      //填写请假单子的日期
+    private String submitdate;
 
-    private String approveid;       //批准人
+    private String approveid;//批假人id
 
-    private String approveName;     //批准人的名字
+    private String approvename;
 
-    //  @JsonFormat(pattern = "yyyy-MM-dd HH-mm")
-    private String approvedata;     //批准日期
+    //  @JsonFormat(pattern = "yyyy-MM-dd HH-mm-ss")
+    private String approvedata;
 
-    private String returndate;      //返回营区大门日期
+    private String returndate;
 
-    private String rtnpersion;      //返回营区大门确认人
+    private String rtnpersion;
 
-    private String enddate;         //申请销假日期
+    private String enddate;
 
-    private String endpersion;      //申请销假的人
+    private String endpersion;//申请销假人
 
-    private String confirmid;       //销假确认人
+    private String confirmid;
 
-    private String confirmdate;     //销假确认日期
+    private String confirmdate;
 
-    private String indate;          //数据第一次输入日期
+    private String indate;
 
-    private String lastdate;        //数据最后更新日期
+    private String lastdate;
 
-    private String firstman;        //第一次插入数据人
+    private String firstman;
 
-    private String lastman;         //数据最后更新日期
+    private String lastman;
 
-    private String status;          //状态0 代表请假成功  1 代表批准  2 出大门 3 返回营区 4 请求销假 5 确认销假  -1 代表不批准' ,
+    private String status;
 
-    private String outdated;        //出门日期
+    private String outdate;
 
-    private String outpersion;      //外出营区大门确认人
+    private String outpersion;
 
-    private String leaveevent;      //假期事项
+    private String leaveevent;
+
+    private String note;
+
+    private String relleaveid;//代请假人
+
+    private String relleavename;
+
+    private String relendid;//带销假人
+
+    private String rank;
+
+    public String getApplicantname() {
+        return applicantname;
+    }
+
+    public void setApplicantname(String applicantname) {
+        this.applicantname = applicantname;
+    }
+
+    public String getApprovename() {
+        return approvename;
+    }
+
+    public void setApprovename(String approvename) {
+        this.approvename = approvename;
+    }
+
+    public String getRelleavename() {
+        return relleavename;
+    }
+
+    public void setRelleavename(String relleavename) {
+        this.relleavename = relleavename;
+    }
+
+    public String getQjrs(){
+
+        return this.qjrs;
+    }
+    public void setQjrs(String ps){
+
+        this.qjrs= ps;
+    }
+
+    public String getName(){
+
+        return this.name;
+    }
+    public void setName(String ps){
+
+        this.name= ps;
+    }
+
+
 
     public Long getId(){
 
@@ -116,13 +172,13 @@ public class LeaveInfo {
 
         this.applicantid = applicantid;
     }
-    public String getSubmitid(){
+    public String getUserid(){
 
-        return this.submitid;
+        return this.userid;
     }
-    public void setSubmitid(String submitid){
+    public void setUserid(String userid){
 
-        this.submitid = submitid;
+        this.userid = userid;
     }
     public String getSubmitdate(){
 
@@ -250,11 +306,11 @@ public class LeaveInfo {
 
     public String getOutdate(){
 
-        return this.outdated;
+        return this.outdate;
     }
     public void setOutdate(String outdate){
 
-        this.outdated = outdate;
+        this.outdate = outdate;
     }
 
     public String getOutpersion(){
@@ -274,44 +330,45 @@ public class LeaveInfo {
 
         this.leaveevent = leaveevent;
     }
-    public String getPersionName() {
-        return persionName;
+
+    public String getNote(){
+
+        return this.note;
+    }
+    public void setNote(String note){
+
+        this.note = note;
     }
 
-    public void setPersionName(String persionName) {
-        this.persionName = persionName;
+
+
+
+    public String getRelleaveid(){
+
+        return this.relleaveid;
+    }
+    public void setRelleaveid(String relleaveid){
+
+        this.relleaveid = relleaveid;
     }
 
-    public String getApplicantName() {
-        return applicantName;
+    public String getRelendid(){
+
+        return this.relendid;
+    }
+    public void setRelendid(String relendid){
+
+        this.relendid = relendid;
     }
 
-    public void setApplicantName(String applicantName) {
-        this.applicantName = applicantName;
-    }
+    public String getRank(){
 
-    public String getSubmitName() {
-        return submitName;
+        return this.rank;
     }
+    public void setRank(String rank){
 
-    public void setSubmitName(String submitName) {
-        this.submitName = submitName;
-    }
-
-    public String getApproveName() {
-        return approveName;
-    }
-
-    public void setApproveName(String approveName) {
-        this.approveName = approveName;
-    }
-
-    public String getOutdated() {
-        return outdated;
-    }
-
-    public void setOutdated(String outdated) {
-        this.outdated = outdated;
+        this.rank = rank;
     }
 
 }
+

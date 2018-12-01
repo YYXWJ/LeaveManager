@@ -33,16 +33,30 @@ public class ApplyPersonBeen {
 
 
     public class person{
-        public int getId() {
-            return id;
-        }
 
-        public void setId(int id) {
-            this.id = id;
-        }
-
-        private int id;
+        //private String userid;
+        //private String username;
+        private String persionid;
         private String name;
+//        private String gender;
+//        private String birthday;
+//        private String birthplace;
+//        private String enthnic;
+//        private String enlistdate;
+//        private String firstdate;
+//        private String lastdate;
+//        private String status;
+//        private String type;
+//        private String rank;
+
+
+        public String getPersionid() {
+            return persionid;
+        }
+
+        public void setPersionid(String persionid) {
+            this.persionid = persionid;
+        }
 
         public String getName() {
             return name;
@@ -50,11 +64,6 @@ public class ApplyPersonBeen {
 
         public void setName(String name) {
             this.name = name;
-        }
-
-        @Override
-        public String toString() {
-            return "id--"+id+"name--"+name;
         }
     }
 }

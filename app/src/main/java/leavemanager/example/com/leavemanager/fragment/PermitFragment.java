@@ -33,6 +33,7 @@ import leavemanager.example.com.leavemanager.utils.http.SendPermitService;
 
 @SuppressLint("ValidFragment")
 public class PermitFragment extends Fragment{
+    private static final String TAG = "PermitFragment";
     private Context mContext;
     private RecyclerView mRv;
     private LeavePermitAdapter mAdapter;
@@ -52,6 +53,52 @@ public class PermitFragment extends Fragment{
         instence.setArguments(bundle);
         return instence;
     }
+
+    @Override
+    public void onCreate(@android.support.annotation.Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+    }
+    @Override
+    public void onResume() {
+        super.onResume();
+    }
+    @Override
+    public void onHiddenChanged(boolean hidden) {
+        if(!hidden){
+            progressDialog = ProgressDialog.show(mContext, "请稍等...", "获取请假单中...", true);
+            GetPermitService.getPermitLeaveInfo(new GetPermitService.CallBack() {
+                @Override
+                public void onSuccessed(final LeavePermitBeen leavePermitBeen) {
+                    getActivity().runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            progressDialog.dismiss();
+                            loadData(leavePermitBeen);
+                        }
+                    });
+                }
+
+                @Override
+                public void onFailed() {
+                    getActivity().runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            progressDialog.dismiss();
+                            Toast.makeText(getContext(),"获取假条失败",Toast.LENGTH_LONG).show();
+                        }
+                    });
+                }
+            });
+        }
+        super.onHiddenChanged(hidden);
+    }
+
+
 
     @Nullable
     @Override
@@ -116,6 +163,8 @@ public class PermitFragment extends Fragment{
                     @Override
                     public void run() {
                         progressDialog.dismiss();
+                        loadData(null);
+
                         Toast.makeText(getContext(),"获取假条失败",Toast.LENGTH_LONG).show();
                     }
                 });
@@ -130,16 +179,8 @@ public class PermitFragment extends Fragment{
         list.add("请假条");
         for (int i = 0; i < leaveInfos.size(); i++) {
             LeavePermitItem item = new LeavePermitItem();
-            item.title = "申请人:"+leaveInfos.get(i).getApplicantid();
-            LeavePermitDescInfo info = new LeavePermitDescInfo();
-            info.applyPersons = leaveInfos.get(i).getApplicantid();
-            info.startTime = leaveInfos.get(i).getFromdate();
-            info.endTIme = leaveInfos.get(i).getTodate();
-            info.place = leaveInfos.get(i).getLastdate();
-            info.event = leaveInfos.get(i).getLeaveevent();
-            info.permitPerson = leaveInfos.get(i).getSubmitid();
-            info.permitTime = leaveInfos.get(i).getSubmitdate();
-            Log.e("PermitFragment",info.toString());
+            item.title = "申请人:"+leaveInfos.get(i).getName();
+            LeaveInfo info =leaveInfos.get(i);
             item.info = info;
             item.extra = leaveInfos.get(i);
             list.add(item);
@@ -147,4 +188,19 @@ public class PermitFragment extends Fragment{
 
         mAdapter.addData(list);
     }
+//    private void loadData(final LeavePermitBeen leavePermitBeen) {
+//        List<Object> list = new ArrayList<>();
+//        ArrayList<LeaveInfo> leaveInfos = leavePermitBeen.getData();
+//        list.add("请假条");
+//        for (int i = 0; i < leaveInfos.size(); i++) {
+//            LeavePermitItem item = new LeavePermitItem();
+//            item.title = "申请人:"+leaveInfos.get(i).getApplicantName();
+//            LeaveInfo info =leaveInfos.get(i);
+//            item.info = info;
+//            item.extra = leaveInfos.get(i);
+//            list.add(item);
+//        }
+//
+//        mAdapter.addData(list);
+//    }
 }

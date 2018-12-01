@@ -26,7 +26,7 @@ public class GetReportbackService {
             public void run() {
                 try {
                     JSONObject userJSON = new JSONObject();
-                    userJSON.put("id", MyApplication.getLoginBeen().getData().get(0).getId()+"");
+                    userJSON.put("id", MyApplication.getLoginBeen().getData().get(0).getGroupid()+"");
                     //userJSON.put("id", "100000006");
                     String content = String.valueOf(userJSON);
                     /**

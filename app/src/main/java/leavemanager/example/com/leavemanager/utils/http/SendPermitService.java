@@ -15,6 +15,7 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 
 import leavemanager.example.com.leavemanager.Constants;
+import leavemanager.example.com.leavemanager.MyApplication;
 import leavemanager.example.com.leavemanager.been.LeavePermitBeen;
 import leavemanager.example.com.leavemanager.been.SendPermitBeen;
 import leavemanager.example.com.leavemanager.node.LeaveInfo;
@@ -43,6 +44,7 @@ public class SendPermitService {
                      */
                     //String url = serverURL+"/persion/login";
                     //String url = "http://10.103.241.30:8085/leaveinfo/creinfo";
+                    url = url + "/"+MyApplication.getLoginBeen().getData().get(0).getPersionid();
                     HttpURLConnection connection = (HttpURLConnection) new URL(url).openConnection();
                     connection.setConnectTimeout(5000);
                     connection.setRequestMethod("POST");
@@ -69,7 +71,9 @@ public class SendPermitService {
                     }
                     if (sendPermitBeen.getCode() == 0) {
                         //LoginSuccessed(loginBeen);
-                        callBack.onSuccessed();
+                        if("success".equals(sendPermitBeen.getData())){
+                            callBack.onSuccessed();
+                        }
                         return;
                     } else {
                         //LoginFailed();

@@ -8,6 +8,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -54,7 +55,7 @@ public class LeavePermitAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
     }
 
     @Override
-    public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, final int position) {
         if (holder instanceof LeavePermitTitleVH) {
             LeavePermitTitleVH vh = (LeavePermitTitleVH) holder;
             vh.mTitleTv.setText((String) mList.get(position));
@@ -62,12 +63,13 @@ public class LeavePermitAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
             final LeavePermitVH vh = (LeavePermitVH) holder;
             final LeavePermitItem data = (LeavePermitItem) mList.get(position);
             vh.mTitleTv.setText(data.title);
-            vh.mNameTv.setText(data.info.applicantId);
-            vh.mTimeTv.setText(data.info.startTime+"-"+data.info.endTIme);
-            vh.mEventTv.setText(data.info.event);
-            vh.mPlaceTv.setText(data.info.place);
-            vh.mPermitNameTv.setText(data.info.permitPerson);
-            vh.mPermitTimeTv.setText(data.info.permitTime);
+            vh.mContentTv.setText("张三加速度计覅数据佛顶山囧妃骄傲手动我金佛我按实际佛is金佛isad金佛我撒娇佛我爱神的箭覅及 ");
+//            vh.mNameTv.setText(data.info.getApplicantName());
+//            vh.mTimeTv.setText(data.info.getFromdate()+"---"+data.info.getTodate());
+//            vh.mEventTv.setText(data.info.getLeaveevent());
+//            vh.mPlaceTv.setText(data.info.getLeavesite());
+//            vh.mPermitNameTv.setText(data.info.getSubmitName());
+//            vh.mPermitTimeTv.setText(data.info.getSubmitdate());
             //final LeaveInfo leaveInfo = (LeaveInfo)data.extra;
             vh.mAgreeBn.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -76,9 +78,9 @@ public class LeavePermitAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
 //                        mOnViewClick.onViewClick(data);
 //                    }
                     LeaveInfo leaveInfo = (LeaveInfo)data.extra;
-                    leaveInfo.setApproveid(MyApplication.getLoginBeen().getData().get(0).getName());
+                    leaveInfo.setApproveid(MyApplication.getLoginBeen().getData().get(0).getPersionid()+"");
                     //SimpleDateFormat formatter   =   new   SimpleDateFormat   ("yyyy年MM月dd日   HH:mm:ss");
-                    SimpleDateFormat formatter   =   new   SimpleDateFormat   ("yyyy年MM月dd日");
+                    SimpleDateFormat formatter   =   new   SimpleDateFormat   ("yyyy-MM-dd HH:mm");
                     Date date = new Date(System.currentTimeMillis());
                     leaveInfo.setApprovedata(formatter.format(date));
                     leaveInfo.setStatus("1");
@@ -88,6 +90,11 @@ public class LeavePermitAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
                             mContext.runOnUiThread(new Runnable() {
                                 @Override
                                 public void run() {
+                                    //vh.itemView.setVisibility(View.GONE);
+                                    //vh.mLinearLayout.setVisibility(View.GONE);
+                                    //vh.mDescContainer.setVisibility(View.GONE);
+                                    mList.remove(position);
+                                    notifyDataSetChanged();
                                     Toast.makeText(mContext,"批假成功",Toast.LENGTH_LONG).show();
 
                                 }
@@ -178,12 +185,14 @@ public class LeavePermitAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
 
         private TextView mTitleTv;
         private View mDescContainer;
-        private TextView mNameTv;
-        private TextView mTimeTv;
-        private TextView mPlaceTv;
-        private TextView mEventTv;
-        private TextView mPermitNameTv;
-        private TextView mPermitTimeTv;
+        private TextView mContentTv;
+//        private TextView mNameTv;
+//        private TextView mTimeTv;
+//        private TextView mPlaceTv;
+//        private TextView mEventTv;
+//        private TextView mPermitNameTv;
+//        private TextView mPermitTimeTv;
+        private LinearLayout mLinearLayout;
         private Button mAgreeBn;
         private Button mDisagreeBn;
         //private
@@ -191,12 +200,14 @@ public class LeavePermitAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
             super(itemView);
             mTitleTv = itemView.findViewById(R.id.tv_title);
             mDescContainer = itemView.findViewById(R.id.ll_desc);
-            mNameTv = itemView.findViewById(R.id.tv_name);
-            mTimeTv = itemView.findViewById(R.id.tv_time);
-            mEventTv = itemView.findViewById(R.id.tv_event);
-            mPlaceTv = itemView.findViewById(R.id.tv_place);
-            mPermitNameTv = itemView.findViewById(R.id.tv_permitname);
-            mPermitTimeTv = itemView.findViewById(R.id.tv_permittime);
+            mContentTv = itemView.findViewById(R.id.tv_content);
+//            mNameTv = itemView.findViewById(R.id.tv_name);
+//            mTimeTv = itemView.findViewById(R.id.tv_time);
+//            mEventTv = itemView.findViewById(R.id.tv_event);
+//            mPlaceTv = itemView.findViewById(R.id.tv_place);
+//            mPermitNameTv = itemView.findViewById(R.id.tv_permitname);
+//            mPermitTimeTv = itemView.findViewById(R.id.tv_permittime);
+            mLinearLayout = itemView.findViewById(R.id.ll_permit_item);
             mAgreeBn = itemView.findViewById(R.id.bn_agree);
             mDisagreeBn = itemView.findViewById(R.id.bn_disagree);
         }

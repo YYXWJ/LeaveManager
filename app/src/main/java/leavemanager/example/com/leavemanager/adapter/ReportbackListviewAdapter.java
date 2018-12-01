@@ -11,6 +11,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.ListAdapter;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -59,7 +60,7 @@ public class ReportbackListviewAdapter extends RecyclerView.Adapter<RecyclerView
     }
 
     @Override
-    public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, final int position) {
         if (holder instanceof LeavePermitTitleVH) {
             LeavePermitTitleVH vh = (LeavePermitTitleVH) holder;
             vh.mTitleTv.setText((String) mList.get(position));
@@ -67,12 +68,12 @@ public class ReportbackListviewAdapter extends RecyclerView.Adapter<RecyclerView
             final LeavePermitVH vh = (LeavePermitVH) holder;
             final LeavePermitItem data = (LeavePermitItem) mList.get(position);
             vh.mTitleTv.setText(data.title);
-            vh.mNameTv.setText(data.info.applicantId);
-            vh.mTimeTv.setText(data.info.startTime+"-"+data.info.endTIme);
-            vh.mEventTv.setText(data.info.event);
-            vh.mPlaceTv.setText(data.info.place);
-            vh.mPermitNameTv.setText(data.info.permitPerson);
-            vh.mPermitTimeTv.setText(data.info.permitTime);
+//            vh.mNameTv.setText(data.info.getApplicantName());
+//            vh.mTimeTv.setText(data.info.getFromdate()+"---"+data.info.getTodate());
+//            vh.mEventTv.setText(data.info.getLeaveevent());
+//            vh.mPlaceTv.setText(data.info.getLeavesite());
+//            vh.mPermitNameTv.setText(data.info.getSubmitName());
+           // vh.mPermitTimeTv.setText(data.info.getSubmitdate());
             //final LeaveInfo leaveInfo = (LeaveInfo)data.extra;
             vh.mReportbackBn.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -86,13 +87,17 @@ public class ReportbackListviewAdapter extends RecyclerView.Adapter<RecyclerView
                     SimpleDateFormat formatter   =   new   SimpleDateFormat   ("yyyy年MM月dd日");
                     Date date = new Date(System.currentTimeMillis());
                     leaveInfo.setApprovedata(formatter.format(date));
-                    leaveInfo.setStatus("1");
+                    leaveInfo.setStatus("4");
                     SendReportbackService.SendReportbackLeaveInfo(leaveInfo, new SendReportbackService.CallBack() {
                         @Override
                         public void onSuccessed() {
                             mContext.runOnUiThread(new Runnable() {
                                 @Override
                                 public void run() {
+                                    //vh.mLinearLayout.setVisibility(View.GONE);
+                                    //vh.mDescContainer.setVisibility(View.GONE);
+                                    mList.remove(position);
+                                    notifyDataSetChanged();
                                     Toast.makeText(mContext,"销假成功",Toast.LENGTH_LONG).show();
 
                                 }
@@ -168,6 +173,7 @@ public class ReportbackListviewAdapter extends RecyclerView.Adapter<RecyclerView
         private TextView mEventTv;
         private TextView mPermitNameTv;
         private TextView mPermitTimeTv;
+        private LinearLayout mLinearLayout;
         private Button mReportbackBn;
         //private
         public LeavePermitVH(View itemView) {
@@ -180,6 +186,7 @@ public class ReportbackListviewAdapter extends RecyclerView.Adapter<RecyclerView
             mPlaceTv = itemView.findViewById(R.id.tv_place);
             mPermitNameTv = itemView.findViewById(R.id.tv_permitname);
             mPermitTimeTv = itemView.findViewById(R.id.tv_permittime);
+            mLinearLayout = itemView.findViewById(R.id.ll_rb_item);
             mReportbackBn = itemView.findViewById(R.id.bn_reportback);
         }
     }

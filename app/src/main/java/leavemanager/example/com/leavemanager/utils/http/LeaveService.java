@@ -25,7 +25,7 @@ import leavemanager.example.com.leavemanager.node.ReceiveLeaveInfo;
 import leavemanager.example.com.leavemanager.utils.JsonUtil;
 
 public class LeaveService {
-    private static String url = Constants.serverURL+"/leaveinfo/creinfo";
+    private static String url = Constants.serverURL+"/m/leaveinfo/creinfo";
     //private static Handler loginHandler = MyApplication.hanlder;
     public interface CallBack{
         void onSuccessed();

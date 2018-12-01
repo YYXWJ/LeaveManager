@@ -12,6 +12,7 @@ import java.net.URL;
 
 import leavemanager.example.com.leavemanager.Constants;
 import leavemanager.example.com.leavemanager.been.LeavePermitBeen;
+import leavemanager.example.com.leavemanager.been.SendReportbackBeen;
 import leavemanager.example.com.leavemanager.node.LeaveInfo;
 import leavemanager.example.com.leavemanager.utils.JsonUtil;
 
@@ -45,17 +46,20 @@ public class SendReportbackService {
                     connection.connect();
                     int stat = connection.getResponseCode();
                     BufferedReader br = null;
-                    LeavePermitBeen leavePermitBeen = null;
+                    SendReportbackBeen sendReportbackBeen = null;
                     if (stat == 200) {
                         br = new BufferedReader(new InputStreamReader(connection.getInputStream()));
-                        //leavePermitBeen = formatData(br.readLine());
+                        sendReportbackBeen = formatData(br.readLine());
                     } else {
                         //LoginFailed();
                         callBack.onFailed();
                         return;
                     }
-                    if (leavePermitBeen.getCode() == 0) {
+                    if (sendReportbackBeen.getCode() == 0) {
                         //LoginSuccessed(loginBeen);
+                        if("success".equals(sendReportbackBeen.getData())){
+                            callBack.onSuccessed();
+                        }
                         //callBack.onSuccessed(leavePermitBeen);
                         return;
                     } else {
@@ -72,5 +76,9 @@ public class SendReportbackService {
             }
         }.start();
         return true;
+    }
+    private static SendReportbackBeen formatData(String msg){
+        Gson gson = new Gson();
+        return gson.fromJson(msg, SendReportbackBeen.class);
     }
 }

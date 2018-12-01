@@ -32,8 +32,8 @@ public class GetPermitService {
             public void run() {
                 try {
                     JSONObject userJSON = new JSONObject();
-                    //userJSON.put("id", MyApplication.getLoginBeen().getData().get(0).getId()+"");
-                    userJSON.put("id", "100000006");
+                    userJSON.put("id", MyApplication.getLoginBeen().getData().get(0).getPersionid()+"");
+                    //userJSON.put("id", "100000006");
                     String content = String.valueOf(userJSON);
                     /**
                      * 请求地址

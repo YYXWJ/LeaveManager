@@ -52,6 +52,39 @@ public class ReportbackFragment extends Fragment {
         return instence;
     }
 
+    @Override
+    public void onHiddenChanged(boolean hidden) {
+        if(!hidden){
+            progressDialog = ProgressDialog.show(mContext, "请稍等...", "获取请假单中...", true);
+            GetReportbackService.getReportbackLeaveInfo(new GetPermitService.CallBack() {
+                @Override
+                public void onSuccessed(final LeavePermitBeen leavePermitBeen) {
+                    progressDialog.dismiss();
+                    getActivity().runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            loadData(leavePermitBeen);
+                        }
+                    });
+
+                }
+
+                @Override
+                public void onFailed() {
+                    progressDialog.dismiss();
+                    getActivity().runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            Toast.makeText(getContext(),"获取假条失败",Toast.LENGTH_LONG).show();
+
+                        }
+                    });
+                }
+            });
+        }
+        super.onHiddenChanged(hidden);
+    }
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
@@ -99,16 +132,8 @@ public class ReportbackFragment extends Fragment {
         list.add("请假条");
         for (int i = 0; i < leaveInfos.size(); i++) {
             LeavePermitItem item = new LeavePermitItem();
-            item.title = "申请人:"+leaveInfos.get(i).getApplicantid();
-            LeavePermitDescInfo info = new LeavePermitDescInfo();
-            info.applyPersons = leaveInfos.get(i).getApplicantid();
-            info.startTime = leaveInfos.get(i).getFromdate();
-            info.endTIme = leaveInfos.get(i).getTodate();
-            info.place = leaveInfos.get(i).getLastdate();
-            info.event = leaveInfos.get(i).getLeaveevent();
-            info.permitPerson = leaveInfos.get(i).getSubmitid();
-            info.permitTime = leaveInfos.get(i).getSubmitdate();
-            Log.e("PermitFragment",info.toString());
+            item.title = "申请人:"+leaveInfos.get(i).getName();
+            LeaveInfo info = leaveInfos.get(i);
             item.info = info;
             item.extra = leaveInfos.get(i);
             list.add(item);

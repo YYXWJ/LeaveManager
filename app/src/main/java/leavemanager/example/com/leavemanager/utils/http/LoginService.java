@@ -26,7 +26,7 @@ import leavemanager.example.com.leavemanager.been.LoginBeen;
 import leavemanager.example.com.leavemanager.node.UserInfo;
 
 public class LoginService {
-    private static String url= Constants.serverURL+"/persion/login";
+    private static String url= Constants.serverURL+"/m/persion/login";
     //private static Handler loginHandler = MyApplication.hanlder;
     /**
      * 用户注册
@@ -101,13 +101,7 @@ public class LoginService {
 
     public static LoginBeen formatData(String msg) throws JSONException {
         Gson gson = new Gson();
-        LoginBeen loginBeen = gson.fromJson(msg, LoginBeen.class);
-        Log.e("123","loginBeen--"+loginBeen.getMsg());
-        Log.e("123","loginBeen--"+loginBeen.getCode());
-        ArrayList<LoginBeen.person> data = loginBeen.getData();
-        for(LoginBeen.person p:data){
-            Log.e("123","data--"+p.toString());
-        }
+       // LoginBeen loginBeen = gson.fromJson(msg, LoginBeen.class);
         return gson.fromJson(msg, LoginBeen.class);
 
     }

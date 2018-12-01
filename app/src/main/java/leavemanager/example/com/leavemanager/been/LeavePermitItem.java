@@ -2,6 +2,8 @@ package leavemanager.example.com.leavemanager.been;
 
 import java.io.Serializable;
 
+import leavemanager.example.com.leavemanager.node.LeaveInfo;
+
 /**
  * Created with Android Studio.
  * User: zhaokai
@@ -13,7 +15,7 @@ public class LeavePermitItem implements Serializable {
 
     public String title;
 
-    public LeavePermitDescInfo info;
+    public LeaveInfo info;
 
     public Object extra;
 }

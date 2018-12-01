@@ -20,7 +20,7 @@ import leavemanager.example.com.leavemanager.MyApplication;
 import leavemanager.example.com.leavemanager.been.ApplyPersonBeen;
 
 public class ApplyPersonsService {
-    private static final String url = Constants.serverURL+"/leaveinfo/validpersion";
+    private static final String url = Constants.serverURL+"/m/leaveinfo/validpersion";
     //private static Handler loginHandler = MyApplication.hanlder;
     public interface CallBack{
         void onSuccessed(ApplyPersonBeen applyPersonBeen);

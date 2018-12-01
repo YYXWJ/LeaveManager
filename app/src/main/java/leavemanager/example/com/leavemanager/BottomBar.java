@@ -15,6 +15,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 
@@ -276,6 +277,16 @@ public class BottomBar extends View {
                 if (target == withinWhichArea((int)event.getX())) {
                     //这里触发点击事件
                     switchFragment(target);
+//                    switch (target){
+//                        case 0:
+//                            break;
+//                        case 1:
+//                            break;
+//                        case 2:
+//                            break;
+//                        case 3:
+//                            break;
+//                    }
                     currentCheckedIndex = target;
                     invalidate();
                 }

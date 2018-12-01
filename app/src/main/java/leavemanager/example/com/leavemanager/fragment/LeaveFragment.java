@@ -80,6 +80,28 @@ public class LeaveFragment extends Fragment {
         instence.setArguments(bundle);
         return instence;
     }
+
+    @Override
+    public void onCreate(@android.support.annotation.Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+    }
+    @Override
+    public void onStart() {
+
+        super.onStart();
+    }
+
+    @Override
+    public void onResume() {
+
+        super.onResume();
+    }
+
+    @Override
+    public void onHiddenChanged(boolean hidden) {
+        super.onHiddenChanged(hidden);
+    }
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle savedInstanceState) {
@@ -106,7 +128,7 @@ public class LeaveFragment extends Fragment {
                 StringBuffer sb = new StringBuffer();
 
                 for(LoginBeen.person p: MyApplication.getLoginBeen().getData()){
-                    if(p.getTyping().equals("A")){
+                    if(p.getType() != null && p.getType().equals("A")){
                         sb.append(p.getGroupid());
                         sb.append(";");
                     }
@@ -153,7 +175,7 @@ public class LeaveFragment extends Fragment {
                 StringBuffer sb = new StringBuffer();
 
                 for(LoginBeen.person p: MyApplication.getLoginBeen().getData()){
-                    if(p.getTyping().equals("A")){
+                    if(p.getType().equals("A")){
                         sb.append(p.getGroupid());
                         sb.append(";");
                     }
@@ -208,16 +230,17 @@ public class LeaveFragment extends Fragment {
                     return;
                 }
                 LeaveInfo leaveInfo = new LeaveInfo();
-                leaveInfo.setApplicantName(et_selectApplyPerson.getText().toString());
-                leaveInfo.setApplicantid(getPersionid());
+                leaveInfo.setName(et_selectApplyPerson.getText().toString());
+                leaveInfo.setQjrs(getApplicantid());
                 leaveInfo.setFromdate(et_selectStartTime.getText().toString());
                 leaveInfo.setTodate(et_selectEndTime.getText().toString());
                 leaveInfo.setLeavesite(et_place.getText().toString());
                 leaveInfo.setLeaveevent(et_event.getText().toString());
                 leaveInfo.setSubmitdate(et_now_time.getText().toString());
-                leaveInfo.setPersionid(getPersionid());
-                leaveInfo.setPersionName(et_real_apply_person.getText().toString());
-                leaveInfo.setSubmitid(MyApplication.getLoginBeen().getData().get(0).getId()+"");
+                leaveInfo.setApplicantid(getPersionid());
+                //leaveInfo.set(et_real_apply_person.getText().toString());
+                leaveInfo.setRelleaveid(MyApplication.getLoginBeen().getData().get(0).getPersionid()+"");
+                leaveInfo.setStatus("0");
                 LeaveService.permitLeaveInfo(leaveInfo, new LeaveService.CallBack() {
                     @Override
                     public void onSuccessed() {
@@ -266,13 +289,15 @@ public class LeaveFragment extends Fragment {
 
     private Dialog selectRealApplyPersions(Context mContext, ApplyPersonBeen obj) {
         final String items[] = new String[obj.getData().size()];
-        final int ids[] = new int[obj.getData().size()];
+        final String ids[] = new String[obj.getData().size()];
         final boolean selected[] = new boolean[obj.getData().size()];
         int i = 0;
         for(ApplyPersonBeen.person p : obj.getData()){
-            items[i] = p.getName();
-            ids[i] = p.getId();
-            selected[i++] = false;
+            if(p!=null) {
+                items[i] = p.getName();
+                ids[i] = p.getPersionid();
+                selected[i++] = false;
+            }
         }
         final AlertDialog.Builder builder = new AlertDialog.Builder(mContext,3);
         builder.setTitle("请选择申请人");
@@ -281,12 +306,13 @@ public class LeaveFragment extends Fragment {
                 new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        if(ids[which] == MyApplication.getLoginBeen().getData().get(0).getId()){
+                        if(ids[which].equals(MyApplication.getLoginBeen().getData().get(0).getPersionid())){
                             et_real_apply_person.setText(items[which]);
                             setPersionid(ids[which]+"");
                         }else{
-                            et_real_apply_person.setText(items[which]+"(代"+MyApplication.getLoginBeen().getData().get(0).getName()+")");
-                            setPersionid(ids[which]+";"+MyApplication.getLoginBeen().getData().get(0).getId());
+                            et_real_apply_person.setText(items[which]+"("+MyApplication.getLoginBeen().getData().get(0).getName()+" 代)");
+                            setPersionid(ids[which]+"");
+                            //setPersionid(ids[which]+";"+MyApplication.getLoginBeen().getData().get(0).getId());
                         }
                         dialog.dismiss();
                     }
@@ -369,7 +395,7 @@ public class LeaveFragment extends Fragment {
             public void onClick(DialogInterface dialog, int which) {
                 //格式化日期并写入控件
                         int arrive_year = datePicker.getYear();
-                        int arrive_month = datePicker.getMonth();
+                        int arrive_month = datePicker.getMonth()+1;
                         int arrive_day = datePicker.getDayOfMonth();
                         String dateStr = DateUtil.formatDate(arrive_year, arrive_month, arrive_day);
 
@@ -392,18 +418,21 @@ public class LeaveFragment extends Fragment {
         if(progressDialog!=null){
             progressDialog.dismiss();
         }
-        selectApplyPersions(mContext,obj).show();
+        Dialog dialog = selectApplyPersions(mContext,obj);
+        dialog.show();
     }
     public Dialog selectApplyPersions(Context context, ApplyPersonBeen obj){
 
         final String items[] = new String[obj.getData().size()];
-        final int ids[] = new int[obj.getData().size()];
+        final String ids[] = new String[obj.getData().size()];
         final boolean selected[] = new boolean[obj.getData().size()];
         int i = 0;
         for(ApplyPersonBeen.person p : obj.getData()){
-            items[i] = p.getName();
-            ids[i] = p.getId();
-            selected[i++] = false;
+            if(p != null && p.getName()!=null && p.getPersionid()!=null) {
+                items[i] = p.getName();
+                ids[i] = p.getPersionid();
+                selected[i++] = false;
+            }
         }
         final AlertDialog.Builder builder = new AlertDialog.Builder(context,3);
         builder.setTitle("请选择请假人");
@@ -430,7 +459,7 @@ public class LeaveFragment extends Fragment {
                     }
                 }
                 sb.deleteCharAt(sb.length() - 1);
-                setPersionid(id.toString());
+                setApplicantid(id.toString());
                 et_selectApplyPerson.setText(sb.toString());
                 dialog.dismiss();
 
