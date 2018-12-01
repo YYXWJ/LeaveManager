@@ -221,11 +221,11 @@ public class LeaveFragment extends Fragment {
         sendButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(et_selectApplyPerson.getText().equals("")||
-                        et_selectStartTime.getText().equals("")||
-                        et_selectEndTime.getText().equals("")||
-                        et_place.getText().equals("")||
-                        et_event.getText().equals("")){
+                if(et_selectApplyPerson.getText().toString().equals("")||
+                        et_selectStartTime.getText().toString().equals("")||
+                        et_selectEndTime.getText().toString().equals("")||
+                        et_place.getText().toString().equals("")||
+                        et_event.getText().toString().equals("")){
                     Toast.makeText(getContext(),"假条信息不全,请补充请假信息",Toast.LENGTH_LONG).show();
                     return;
                 }
