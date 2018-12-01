@@ -21,7 +21,7 @@ import leavemanager.example.com.leavemanager.been.LoginBeen;
 import leavemanager.example.com.leavemanager.node.LeaveInfo;
 
 public class GetPermitService {
-    private static String url = Constants.serverURL+"/leaveinfo/getleavenumber";
+    private static String url = Constants.serverURL+"/m/leaveinfo/getleavenumber";
     public interface CallBack{
         void onSuccessed(LeavePermitBeen leavePermitBeen);
         void onFailed();

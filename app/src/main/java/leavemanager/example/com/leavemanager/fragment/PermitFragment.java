@@ -176,10 +176,22 @@ public class PermitFragment extends Fragment{
     private void loadData(final LeavePermitBeen leavePermitBeen) {
         List<Object> list = new ArrayList<>();
         ArrayList<LeaveInfo> leaveInfos = leavePermitBeen.getData();
+        if(leaveInfos == null){
+            getActivity().runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    progressDialog.dismiss();
+                    loadData(null);
+
+                    Toast.makeText(getContext(),"没有可批假条",Toast.LENGTH_LONG).show();
+                }
+            });
+            return ;
+        }
         list.add("请假条");
         for (int i = 0; i < leaveInfos.size(); i++) {
             LeavePermitItem item = new LeavePermitItem();
-            item.title = "申请人:"+leaveInfos.get(i).getName();
+            item.title = "申请人:"+leaveInfos.get(i).getName().replace(";"," ");
             LeaveInfo info =leaveInfos.get(i);
             item.info = info;
             item.extra = leaveInfos.get(i);

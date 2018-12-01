@@ -232,8 +232,9 @@ public class LeaveFragment extends Fragment {
                 LeaveInfo leaveInfo = new LeaveInfo();
                 leaveInfo.setName(et_selectApplyPerson.getText().toString());
                 leaveInfo.setQjrs(getApplicantid());
-                leaveInfo.setFromdate(et_selectStartTime.getText().toString());
-                leaveInfo.setTodate(et_selectEndTime.getText().toString());
+
+                leaveInfo.setFromdate(et_selectStartTime.getText().toString().replace("-","").replace(" ",""));
+                leaveInfo.setTodate(et_selectEndTime.getText().toString().replace("-","").replace(" ",""));
                 leaveInfo.setLeavesite(et_place.getText().toString());
                 leaveInfo.setLeaveevent(et_event.getText().toString());
                 leaveInfo.setSubmitdate(et_now_time.getText().toString());
@@ -402,7 +403,7 @@ public class LeaveFragment extends Fragment {
                         int arrive_hour = timePicker.getCurrentHour();
                         int arrive_min = timePicker.getCurrentMinute();
                         String timeStr = DateUtil.formatTime(arrive_hour, arrive_min);
-                ((EditText)v).setText(dateStr+timeStr);
+                ((EditText)v).setText(dateStr+" "+timeStr);
 
             }
         });
@@ -450,13 +451,18 @@ public class LeaveFragment extends Fragment {
             public void onClick(DialogInterface dialog, int which) {
                 StringBuffer sb = new StringBuffer();
                 StringBuffer id = new StringBuffer();
+                boolean chooseFlag = false;
                 for (int i = 0; i < selected.length; i++) {
                     if(selected[i]==true){
+                        chooseFlag = true;
                         sb.append(items[i]);
                         sb.append(";");
                         id.append(ids[i]+"");
                         id.append(";");
                     }
+                }
+                if(!chooseFlag){
+                    return ;
                 }
                 sb.deleteCharAt(sb.length() - 1);
                 setApplicantid(id.toString());

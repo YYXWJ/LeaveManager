@@ -21,6 +21,7 @@ import leavemanager.example.com.leavemanager.MyApplication;
 import leavemanager.example.com.leavemanager.R;
 import leavemanager.example.com.leavemanager.been.LeavePermitItem;
 import leavemanager.example.com.leavemanager.node.LeaveInfo;
+import leavemanager.example.com.leavemanager.utils.DateUtil;
 import leavemanager.example.com.leavemanager.utils.http.SendPermitService;
 
 
@@ -63,7 +64,22 @@ public class LeavePermitAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
             final LeavePermitVH vh = (LeavePermitVH) holder;
             final LeavePermitItem data = (LeavePermitItem) mList.get(position);
             vh.mTitleTv.setText(data.title);
-            vh.mContentTv.setText("张三加速度计覅数据佛顶山囧妃骄傲手动我金佛我按实际佛is金佛isad金佛我撒娇佛我爱神的箭覅及 ");
+            StringBuffer sb = new StringBuffer();
+            sb.append("    ");
+            sb.append(data.info.getName().replace(";",","));
+            sb.append("拟于");
+            String fromdata= DateUtil.formatShowDate(data.info.getFromdate());
+            sb.append(fromdata);
+            sb.append("至");
+            String todata= DateUtil.formatShowDate(data.info.getTodate());
+            sb.append(todata);
+            sb.append("到");
+            sb.append(data.info.getLeavesite());
+            sb.append("办理");
+            sb.append(data.info.getLeaveevent());
+            sb.append("事宜,请批准!");
+
+            vh.mContentTv.setText(sb.toString());
 //            vh.mNameTv.setText(data.info.getApplicantName());
 //            vh.mTimeTv.setText(data.info.getFromdate()+"---"+data.info.getTodate());
 //            vh.mEventTv.setText(data.info.getLeaveevent());
