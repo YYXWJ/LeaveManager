@@ -80,23 +80,13 @@ public class LeavePermitAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
             sb.append("事宜,请批准!");
 
             vh.mContentTv.setText(sb.toString());
-//            vh.mNameTv.setText(data.info.getApplicantName());
-//            vh.mTimeTv.setText(data.info.getFromdate()+"---"+data.info.getTodate());
-//            vh.mEventTv.setText(data.info.getLeaveevent());
-//            vh.mPlaceTv.setText(data.info.getLeavesite());
-//            vh.mPermitNameTv.setText(data.info.getSubmitName());
-//            vh.mPermitTimeTv.setText(data.info.getSubmitdate());
-            //final LeaveInfo leaveInfo = (LeaveInfo)data.extra;
             vh.mAgreeBn.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-//                    if(mOnViewClick!=null){
-//                        mOnViewClick.onViewClick(data);
-//                    }
                     LeaveInfo leaveInfo = (LeaveInfo)data.extra;
-                    leaveInfo.setApproveid(MyApplication.getLoginBeen().getData().get(0).getPersionid()+"");
+                    leaveInfo.setApproveid(MyApplication.getLoginBeen().getData().get(0).getPersionid());
                     //SimpleDateFormat formatter   =   new   SimpleDateFormat   ("yyyy年MM月dd日   HH:mm:ss");
-                    SimpleDateFormat formatter   =   new   SimpleDateFormat   ("yyyy-MM-dd HH:mm");
+                    SimpleDateFormat formatter   =   new   SimpleDateFormat   ("yyyyMMddHHmm");
                     Date date = new Date(System.currentTimeMillis());
                     leaveInfo.setApprovedata(formatter.format(date));
                     leaveInfo.setStatus("1");
@@ -134,20 +124,34 @@ public class LeavePermitAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
                 @Override
                 public void onClick(View v) {
                     LeaveInfo leaveInfo = (LeaveInfo)data.extra;
-                    leaveInfo.setApproveid(MyApplication.getLoginBeen().getData().get(0).getName());
-                    SimpleDateFormat formatter   =   new   SimpleDateFormat   ("yyyy年MM月dd日   HH:mm:ss");
+                    leaveInfo.setApproveid(MyApplication.getLoginBeen().getData().get(0).getPersionid());
+                    SimpleDateFormat formatter   =   new   SimpleDateFormat   ("yyyyMMddHHmm");
                     Date date = new Date(System.currentTimeMillis());
                     leaveInfo.setApprovedata(formatter.format(date));
                     leaveInfo.setStatus("-1");
                     SendPermitService.SendPermitLeaveInfo(leaveInfo, new SendPermitService.CallBack() {
                         @Override
                         public void onSuccessed() {
-                            //Toast.makeText(mContext,"批假成功",Toast.LENGTH_LONG).show();
+                            mContext.runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    mList.remove(position);
+                                    notifyDataSetChanged();
+                                    Toast.makeText(mContext,"批假成功",Toast.LENGTH_LONG).show();
+
+                                }
+                            });
                         }
 
                         @Override
                         public void onFailed() {
-                            //Toast.makeText(mContext,"批假失败",Toast.LENGTH_LONG).show();
+                            mContext.runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    Toast.makeText(mContext,"批假失败",Toast.LENGTH_LONG).show();
+
+                                }
+                            });
                         }
                     });
                 }

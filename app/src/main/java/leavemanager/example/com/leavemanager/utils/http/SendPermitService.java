@@ -22,7 +22,7 @@ import leavemanager.example.com.leavemanager.node.LeaveInfo;
 import leavemanager.example.com.leavemanager.utils.JsonUtil;
 
 public class SendPermitService {
-    private static String url = Constants.serverURL+"/leaveinfo/approve";
+    private static String url = Constants.serverURL+"/m/leaveinfo/approve";
     public interface CallBack{
         void onSuccessed();
         void onFailed();
