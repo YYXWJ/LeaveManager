@@ -85,17 +85,17 @@ public class ApplyPersonsService {
         }.start();
         return true;
     }
-    private static void applyPersonFailed() {
-        Message msg = Message.obtain();
-        msg.what = MyApplication.APPLYPERSON_FAIL;
-        MyApplication.hanlder.handleMessage(msg);
-    }
-    private static void applyPersonSuccessed(ApplyPersonBeen applyPersonBeen) {
-        Message msg = Message.obtain();
-        msg.what = MyApplication.APPLYPERSON_SUCCESS;
-        msg.obj = applyPersonBeen;
-        MyApplication.hanlder.handleMessage(msg);
-    }
+//    private static void applyPersonFailed() {
+//        Message msg = Message.obtain();
+//        msg.what = MyApplication.APPLYPERSON_FAIL;
+//        MyApplication.hanlder.handleMessage(msg);
+//    }
+//    private static void applyPersonSuccessed(ApplyPersonBeen applyPersonBeen) {
+//        Message msg = Message.obtain();
+//        msg.what = MyApplication.APPLYPERSON_SUCCESS;
+//        msg.obj = applyPersonBeen;
+//        MyApplication.hanlder.handleMessage(msg);
+//    }
     public static ApplyPersonBeen formatData(String msg) throws JSONException {
         Gson gson = new Gson();
         ApplyPersonBeen applyPersionBeen = gson.fromJson(msg, ApplyPersonBeen.class);

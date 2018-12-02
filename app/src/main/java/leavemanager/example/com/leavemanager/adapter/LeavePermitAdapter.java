@@ -1,7 +1,6 @@
 package leavemanager.example.com.leavemanager.adapter;
 
 import android.app.Activity;
-import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -78,8 +77,16 @@ public class LeavePermitAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
             sb.append("办理");
             sb.append(data.info.getLeaveevent());
             sb.append("事宜,请批准!");
-
             vh.mContentTv.setText(sb.toString());
+            String submitPersion = null;
+            if(data.info.getRelleaveid()!=null){
+                submitPersion = data.info.getApplicantname() +"("+data.info.getRelleavename()+" 代)";
+            }else{
+                submitPersion = data.info.getApplicantname();
+            }
+            vh.mSubmitPersionTv.setText(submitPersion);
+            String submitDate = DateUtil.formatShowDate(data.info.getSubmitdate());
+            vh.mSubmitDateTv.setText(submitDate);
             vh.mAgreeBn.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -206,12 +213,8 @@ public class LeavePermitAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
         private TextView mTitleTv;
         private View mDescContainer;
         private TextView mContentTv;
-//        private TextView mNameTv;
-//        private TextView mTimeTv;
-//        private TextView mPlaceTv;
-//        private TextView mEventTv;
-//        private TextView mPermitNameTv;
-//        private TextView mPermitTimeTv;
+        private TextView mSubmitPersionTv;
+        private TextView mSubmitDateTv;
         private LinearLayout mLinearLayout;
         private Button mAgreeBn;
         private Button mDisagreeBn;
@@ -221,6 +224,8 @@ public class LeavePermitAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
             mTitleTv = itemView.findViewById(R.id.tv_title);
             mDescContainer = itemView.findViewById(R.id.ll_desc);
             mContentTv = itemView.findViewById(R.id.tv_content);
+            mSubmitPersionTv = itemView.findViewById(R.id.endpersion_tv);
+            mSubmitDateTv = itemView.findViewById(R.id.submitdata_tv);
 //            mNameTv = itemView.findViewById(R.id.tv_name);
 //            mTimeTv = itemView.findViewById(R.id.tv_time);
 //            mEventTv = itemView.findViewById(R.id.tv_event);

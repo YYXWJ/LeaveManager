@@ -186,12 +186,10 @@ public class ReportbackListviewAdapter extends RecyclerView.Adapter<RecyclerView
         private TextView mTitleTv;
         private View mDescContainer;
         private TextView mContentTv;
-//        private TextView mNameTv;
-//        private TextView mTimeTv;
-//        private TextView mPlaceTv;
-//        private TextView mEventTv;
-//        private TextView mPermitNameTv;
-//        private TextView mPermitTimeTv;
+        private TextView mSubmitPersionTv;
+        private TextView mSubmitDateTv;
+        private TextView mApprovePersionTv;
+        private TextView mApproveDateTv;
         private LinearLayout mLinearLayout;
         private Button mReportbackBn;
         //private
@@ -200,12 +198,9 @@ public class ReportbackListviewAdapter extends RecyclerView.Adapter<RecyclerView
             mTitleTv = itemView.findViewById(R.id.tv_title);
             mDescContainer = itemView.findViewById(R.id.ll_desc);
             mContentTv = itemView.findViewById(R.id.tv_content);
-//            mNameTv = itemView.findViewById(R.id.tv_name);
-//            mTimeTv = itemView.findViewById(R.id.tv_time);
-//            mEventTv = itemView.findViewById(R.id.tv_event);
-//            mPlaceTv = itemView.findViewById(R.id.tv_place);
-//            mPermitNameTv = itemView.findViewById(R.id.tv_permitname);
-//            mPermitTimeTv = itemView.findViewById(R.id.tv_permittime);
+            mSubmitPersionTv = itemView.findViewById(R.id.submitname_tv);
+            mSubmitDateTv = itemView.findViewById(R.id.submitdata_tv);
+            mApprovePersionTv = itemView.findViewById(R.id.approvename_tv);
             mLinearLayout = itemView.findViewById(R.id.ll_rb_item);
             mReportbackBn = itemView.findViewById(R.id.bn_reportback);
         }

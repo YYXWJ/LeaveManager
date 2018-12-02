@@ -34,6 +34,7 @@ public class LoginActivity extends Activity {
         loginButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                //oginSuccess();
                 if (et_phone.getText().toString().equals("") || et_passwd.getText().toString().equals("")) {
                     DialogUtil.userNameOrUserPasswdIsNoneDialog(LoginActivity.this).show();
 
@@ -43,19 +44,29 @@ public class LoginActivity extends Activity {
                 UserInfo userInfo = new UserInfo();
                 userInfo.setUsername(et_phone.getText().toString());
                 userInfo.setPasswd(et_passwd.getText().toString());
-                LoginService.userRegister(userInfo);
+                LoginService.userRegister(userInfo, new LoginService.CallBack() {
+                    @Override
+                    public void onSuccess() {
+                        loginFail();
+                    }
+
+                    @Override
+                    public void onFailed() {
+                        loginSuccess();
+                    }
+                });
             }
         });
     }
-    public static void loginFail(){
+    public void loginFail(){
         if(progressDialog!=null){
             progressDialog.dismiss();
         }
-        Toast.makeText(MyApplication.getApplication(),"登录失败，请重试",Toast.LENGTH_LONG).show();
+        Toast.makeText(this,"登录失败，请重试",Toast.LENGTH_LONG).show();
     }
-    public static void loginSuccess(){
+    public void loginSuccess(){
         Intent intent = new Intent();
-        intent.setClass(MyApplication.getApplication(), MainActivity.class);
-        MyApplication.getApplication().startActivity(intent);
+        intent.setClass(this, MainActivity.class);
+        startActivity(intent);
     }
 }

@@ -26,12 +26,17 @@ import leavemanager.example.com.leavemanager.been.LoginBeen;
 import leavemanager.example.com.leavemanager.node.UserInfo;
 
 public class LoginService {
+    public interface CallBack{
+        void onSuccess();
+        void onFailed();
+    }
+
     private static String url= Constants.serverURL+"/m/persion/login";
     //private static Handler loginHandler = MyApplication.hanlder;
     /**
      * 用户注册
      */
-    public static boolean userRegister(final UserInfo user)
+    public static boolean userRegister(final UserInfo user, final LoginService.CallBack callBack)
     {
         new Thread()
         {
@@ -66,37 +71,42 @@ public class LoginService {
                         br = new BufferedReader(new InputStreamReader(connection.getInputStream()));
                         loginBeen = formatData(br.readLine());
                     } else {
-                        LoginFailed();
+                        //LoginFailed();
+                        callBack.onFailed();
                         return;
                     }
                     if(loginBeen.getCode() == 0){
-                        LoginSuccessed(loginBeen);
+                        //LoginSuccessed(loginBeen);
+                        MyApplication.setLoginBeen(loginBeen);
+                        callBack.onSuccess();
                         return;
                     }else{
-                        LoginFailed();
+                        //LoginFailed();
+                        callBack.onFailed();
                         return;
                     }
                 }catch (Exception e)
                 {
                     e.printStackTrace();
-                    LoginFailed();
+                    //LoginFailed();
+                    callBack.onFailed();
                 }
             }
         }.start();
         return true;
     }
 
-    private static void LoginFailed() {
-        Message msg = Message.obtain();
-        msg.what = MyApplication.LOGIN_FAIL;
-        MyApplication.hanlder.handleMessage(msg);
-    }
-    private static void LoginSuccessed(LoginBeen loginBeen) {
-        Message msg = Message.obtain();
-        msg.what = MyApplication.LOGIN_SUCCESS;
-        msg.obj = loginBeen;
-        MyApplication.hanlder.handleMessage(msg);
-    }
+//    private static void LoginFailed() {
+//        Message msg = Message.obtain();
+//        msg.what = MyApplication.LOGIN_FAIL;
+//        MyApplication.hanlder.handleMessage(msg);
+//    }
+//    private static void LoginSuccessed(LoginBeen loginBeen) {
+//        Message msg = Message.obtain();
+//        msg.what = MyApplication.LOGIN_SUCCESS;
+//        msg.obj = loginBeen;
+//        MyApplication.hanlder.handleMessage(msg);
+//    }
 
 
     public static LoginBeen formatData(String msg) throws JSONException {

@@ -16,7 +16,7 @@ import leavemanager.example.com.leavemanager.utils.DialogUtil;
 
 public class MyApplication extends Application {
     private static MyApplication myApplication = null;
-    public static Handler hanlder = new MyHandler();
+    //public static Handler hanlder = new MyHandler();
     public final static int LOGIN_FAIL=0;
     public final static int LOGIN_SUCCESS=1;
     public final static int APPLYPERSON_FAIL=3;
@@ -31,6 +31,9 @@ public class MyApplication extends Application {
         }
         return null;
     }
+    public static void setLoginBeen(LoginBeen lb){
+        loginBeen = lb;
+    }
     public static MyApplication getApplication() {
         return myApplication;
     }
@@ -41,35 +44,35 @@ public class MyApplication extends Application {
 
         myApplication = this;
     }
-    private static class MyHandler extends Handler {
-
-
-        @Override
-        public void handleMessage(Message msg) {
-            super.handleMessage(msg);
-            Looper.prepare();
-            switch (msg.what) {
-                case LOGIN_FAIL://登录失败
-                    LoginActivity.loginFail();
-                    //test
-                    //LoginActivity.loginSuccess();
-                    break;
-                case LOGIN_SUCCESS://登录成功
-                    loginBeen = (LoginBeen)msg.obj;
-                    LoginActivity.loginSuccess();
-                    break;
-                case APPLYPERSON_FAIL:
-                    //LeaveFragment.getApplyPersonsFail();
-                    break;
-                case APPLYPERSON_SUCCESS:
-                    //LeaveFragment.getApplyPersonsSuccess((ApplyPersonBeen)msg.obj);
-                    break;
-                case PERMIT_FAIL:
-                    break;
-                case PERMIT_SUCCESS:
-                    break;
-            }
-            Looper.loop();
-        }
-    }
+//    private static class MyHandler extends Handler {
+//
+//
+//        @Override
+//        public void handleMessage(Message msg) {
+//            super.handleMessage(msg);
+//            Looper.prepare();
+//            switch (msg.what) {
+//                case LOGIN_FAIL://登录失败
+//                    LoginActivity.loginFail();
+//                    //test
+//                    //LoginActivity.loginSuccess();
+//                    break;
+//                case LOGIN_SUCCESS://登录成功
+//                    loginBeen = (LoginBeen)msg.obj;
+//                    LoginActivity.loginSuccess();
+//                    break;
+//                case APPLYPERSON_FAIL:
+//                    //LeaveFragment.getApplyPersonsFail();
+//                    break;
+//                case APPLYPERSON_SUCCESS:
+//                    //LeaveFragment.getApplyPersonsSuccess((ApplyPersonBeen)msg.obj);
+//                    break;
+//                case PERMIT_FAIL:
+//                    break;
+//                case PERMIT_SUCCESS:
+//                    break;
+//            }
+//            Looper.myLooper();
+//        }
+//    }
 }
