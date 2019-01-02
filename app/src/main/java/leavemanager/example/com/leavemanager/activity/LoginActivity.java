@@ -47,22 +47,30 @@ public class LoginActivity extends Activity {
                 LoginService.userRegister(userInfo, new LoginService.CallBack() {
                     @Override
                     public void onSuccess() {
-                        loginFail();
+                        loginSuccess();
                     }
 
                     @Override
                     public void onFailed() {
-                        loginSuccess();
+                        loginFail();
+
                     }
                 });
             }
         });
     }
     public void loginFail(){
-        if(progressDialog!=null){
-            progressDialog.dismiss();
-        }
-        Toast.makeText(this,"登录失败，请重试",Toast.LENGTH_LONG).show();
+
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                if(progressDialog!=null){
+                    progressDialog.dismiss();
+                }
+                Toast.makeText(LoginActivity.this,"登录失败，请重试",Toast.LENGTH_LONG).show();
+
+            }
+        });
     }
     public void loginSuccess(){
         Intent intent = new Intent();

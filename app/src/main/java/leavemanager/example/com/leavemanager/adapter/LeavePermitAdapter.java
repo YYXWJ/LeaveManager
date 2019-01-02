@@ -7,6 +7,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -136,6 +137,7 @@ public class LeavePermitAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
                     Date date = new Date(System.currentTimeMillis());
                     leaveInfo.setApprovedata(formatter.format(date));
                     leaveInfo.setStatus("-1");
+                    leaveInfo.setNote(vh.mDisagreeEt.getText().toString());
                     SendPermitService.SendPermitLeaveInfo(leaveInfo, new SendPermitService.CallBack() {
                         @Override
                         public void onSuccessed() {
@@ -218,6 +220,7 @@ public class LeavePermitAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
         private LinearLayout mLinearLayout;
         private Button mAgreeBn;
         private Button mDisagreeBn;
+        private EditText mDisagreeEt;
         //private
         public LeavePermitVH(View itemView) {
             super(itemView);
@@ -235,6 +238,7 @@ public class LeavePermitAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
             mLinearLayout = itemView.findViewById(R.id.ll_permit_item);
             mAgreeBn = itemView.findViewById(R.id.bn_agree);
             mDisagreeBn = itemView.findViewById(R.id.bn_disagree);
+            mDisagreeEt = itemView.findViewById(R.id.et_disagree);
         }
     }
 }

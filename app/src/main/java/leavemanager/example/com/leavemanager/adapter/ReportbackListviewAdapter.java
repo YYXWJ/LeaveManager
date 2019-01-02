@@ -92,6 +92,10 @@ public class ReportbackListviewAdapter extends RecyclerView.Adapter<RecyclerView
 //            vh.mPermitNameTv.setText(data.info.getSubmitName());
            // vh.mPermitTimeTv.setText(data.info.getSubmitdate());
             //final LeaveInfo leaveInfo = (LeaveInfo)data.extra;
+            vh.mSubmitPersionTv.setText("申请人:"+data.info.getApplicantname());
+            vh.mSubmitDateTv.setText(DateUtil.formatShowDate(data.info.getSubmitdate()));
+            vh.mApprovePersionTv.setText("审批人:"+data.info.getApprovename());
+            vh.mApproveDateTv.setText(DateUtil.formatShowDate(data.info.getApprovedata()));
             vh.mReportbackBn.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -199,8 +203,9 @@ public class ReportbackListviewAdapter extends RecyclerView.Adapter<RecyclerView
             mDescContainer = itemView.findViewById(R.id.ll_desc);
             mContentTv = itemView.findViewById(R.id.tv_content);
             mSubmitPersionTv = itemView.findViewById(R.id.submitname_tv);
-            mSubmitDateTv = itemView.findViewById(R.id.submitdata_tv);
+            mSubmitDateTv = itemView.findViewById(R.id.submitdate_tv);
             mApprovePersionTv = itemView.findViewById(R.id.approvename_tv);
+            mApproveDateTv = itemView.findViewById(R.id.approvedate_tv);
             mLinearLayout = itemView.findViewById(R.id.ll_rb_item);
             mReportbackBn = itemView.findViewById(R.id.bn_reportback);
         }

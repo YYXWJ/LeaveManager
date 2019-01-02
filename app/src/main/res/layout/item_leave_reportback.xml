@@ -39,11 +39,12 @@
             android:gravity="right"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
+
         <TextView
             android:id="@+id/submitdate_tv"
-            android:gravity="right"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            android:gravity="right" />
         <TextView
             android:id="@+id/approvename_tv"
             android:gravity="right"

@@ -33,6 +33,7 @@ import leavemanager.example.com.leavemanager.node.LeaveInfo;
 import leavemanager.example.com.leavemanager.node.ReceiveLeaveInfo;
 import leavemanager.example.com.leavemanager.utils.DateUtil;
 import leavemanager.example.com.leavemanager.utils.http.ApplyPersonsService;
+import leavemanager.example.com.leavemanager.utils.http.IsCapableService;
 import leavemanager.example.com.leavemanager.utils.http.LeaveService;
 
 
@@ -45,10 +46,20 @@ public class LeaveFragment extends Fragment {
     private EditText et_event;
     private EditText et_real_apply_person;
     private EditText et_now_time;
+    private EditText et_approveid;
     private Button sendButton;
     private String persionid;
     private String applicantid;
 
+    public String getApproveid() {
+        return approveid;
+    }
+
+    public void setApproveid(String approveid) {
+        this.approveid = approveid;
+    }
+
+    private String approveid;
     public String getApplicantid() {
         return applicantid;
     }
@@ -115,6 +126,7 @@ public class LeaveFragment extends Fragment {
         sendButton = view.findViewById(R.id.leave_submit);
         et_real_apply_person = view.findViewById(R.id.real_apply_person);
         et_now_time = view.findViewById(R.id.apply_time);
+        et_approveid = view.findViewById(R.id.approveid_et);
         initView();
 //        et_real_apply_person.setEnabled(false);
 //        et_real_apply_person.setFocusable(false);
@@ -159,11 +171,49 @@ public class LeaveFragment extends Fragment {
             }
         });
 
+        et_approveid.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(MyApplication.getLoginBeen() == null){
+                    return;
+                }
+                StringBuffer sb = new StringBuffer();
 
+                for(LoginBeen.person p: MyApplication.getLoginBeen().getData()){
+                    if(p.getType() != null && p.getType().equals("A")){
+                        sb.append(p.getGroupid());
+                        sb.append(";");
+                    }
+                }
+                sb.deleteCharAt(sb.length() - 1);
+                progressDialog = ProgressDialog.show(mContext, "请稍等...", "获取名单中...", true);
+                ApplyPersonsService.getApplyPersions(sb.toString(), new ApplyPersonsService.CallBack() {
+                    @Override
+                    public void onSuccessed(final ApplyPersonBeen applyPersonBeen) {
+                        getActivity().runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                getRealApproveidPersonSuccess(applyPersonBeen);
+                            }
+                        });
+                    }
+
+                    @Override
+                    public void onFailed() {
+                        getActivity().runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                getApplyPersonsFail();
+                            }
+                        });
+                    }
+                });
+            }
+        });
         et_now_time.setEnabled(false);
         et_now_time.setFocusable(false);
         et_now_time.setKeyListener(null);
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH-mm");
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy年MM月dd日 HH时mm分");
         Date date = new Date(System.currentTimeMillis());
         et_now_time.setText(simpleDateFormat.format(date));
         et_selectApplyPerson.setOnClickListener(new View.OnClickListener() {
@@ -225,7 +275,8 @@ public class LeaveFragment extends Fragment {
                         et_selectStartTime.getText().toString().equals("")||
                         et_selectEndTime.getText().toString().equals("")||
                         et_place.getText().toString().equals("")||
-                        et_event.getText().toString().equals("")){
+                        et_event.getText().toString().equals("")||
+                        et_approveid.getText().toString().equals("")){
                     Toast.makeText(getContext(),"假条信息不全,请补充请假信息",Toast.LENGTH_LONG).show();
                     return;
                 }
@@ -238,46 +289,116 @@ public class LeaveFragment extends Fragment {
                 leaveInfo.setLeavesite(et_place.getText().toString());
                 leaveInfo.setLeaveevent(et_event.getText().toString());
                 leaveInfo.setSubmitdate(et_now_time.getText().toString());
-                leaveInfo.setApplicantid(getPersionid());
-                //leaveInfo.set(et_real_apply_person.getText().toString());
-                leaveInfo.setRelleaveid(MyApplication.getLoginBeen().getData().get(0).getPersionid()+"");
+                leaveInfo.setApproveid(getApproveid());
+                if(getPersionid()!=null && MyApplication.getLoginBeen().getData().get(0).getPersionid()!=null &&
+                        getPersionid().equals(MyApplication.getLoginBeen().getData().get(0).getPersionid())){
+                    leaveInfo.setApplicantid(getPersionid());
+                }else if(getPersionid()!=null && MyApplication.getLoginBeen().getData().get(0).getPersionid()!=null &&
+                        !getPersionid().equals(MyApplication.getLoginBeen().getData().get(0).getPersionid())){
+                    leaveInfo.setApplicantid(getPersionid());
+                    leaveInfo.setRelleaveid(MyApplication.getLoginBeen().getData().get(0).getPersionid());
+                }
                 leaveInfo.setStatus("0");
-                LeaveService.permitLeaveInfo(leaveInfo, new LeaveService.CallBack() {
-                    @Override
-                    public void onSuccessed() {
-                        getActivity().runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
-                                Toast.makeText(getContext(),"提交成功",Toast.LENGTH_LONG).show();
-                                initView();
-                            }
-                        });
+                if(IsCapableService.isCapable(getApplicantid())){
+                    LeaveService.permitLeaveInfo(leaveInfo, new LeaveService.CallBack() {
+                        @Override
+                        public void onSuccessed() {
+                            getActivity().runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    Toast.makeText(getContext(),"提交成功",Toast.LENGTH_LONG).show();
+                                    initView();
+                                }
+                            });
 
-                    }
+                        }
 
-                    @Override
-                    public void onFailed() {
-                        getActivity().runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
-                                Toast.makeText(getContext(),"提交失败",Toast.LENGTH_LONG).show();
-                            }
-                        });
-                    }
-                });
+                        @Override
+                        public void onFailed() {
+                            getActivity().runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    Toast.makeText(getContext(),"提交失败",Toast.LENGTH_LONG).show();
+                                }
+                            });
+                        }
+                    });
+                }else{
+                    Toast.makeText(mContext,"请假人中有人已经请假，请重新选择",Toast.LENGTH_LONG).show();
+                }
+
             }
         });
         return view;
         //return super.onCreateView(inflater, container, savedInstanceState);
     }
+
+    private void getRealApproveidPersonSuccess(ApplyPersonBeen applyPersonBeen) {
+        if(progressDialog!=null){
+            progressDialog.dismiss();
+        }
+        selectRealApproveidPersions(mContext,applyPersonBeen).show();
+    }
+    private Dialog selectRealApproveidPersions(Context mContext, ApplyPersonBeen obj) {
+        final String items[] = new String[obj.getData().size()];
+        final String ids[] = new String[obj.getData().size()];
+        final boolean selected[] = new boolean[obj.getData().size()];
+        int i = 0;
+        for(ApplyPersonBeen.person p : obj.getData()){
+            if(p!=null) {
+                items[i] = p.getName();
+                ids[i] = p.getPersionid();
+                selected[i++] = false;
+            }
+        }
+        final AlertDialog.Builder builder = new AlertDialog.Builder(mContext,3);
+        builder.setTitle("请选择申请人");
+        builder.setIcon(R.mipmap.ic_launcher);
+        builder.setSingleChoiceItems(items, 0,
+                new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        et_approveid.setText(items[which]);
+                        setApproveid(ids[which]);
+                        dialog.dismiss();
+                    }
+                });
+//        builder.setPositiveButton("确定", new DialogInterface.OnClickListener() {
+//            @Override
+//            public void onClick(DialogInterface dialog, int which) {
+//                StringBuffer sb = new StringBuffer();
+//                StringBuffer id = new StringBuffer();
+//                for (int i = 0; i < selected.length; i++) {
+//                    if(selected[i]==true){
+//                        sb.append(items[i]);
+//                        sb.append(";");
+//                        id.append(ids[i]+"");
+//                        id.append(";");
+//                    }
+//                }
+//                sb.deleteCharAt(sb.length() - 1);
+//                setPersionid(id.toString());
+//                et_selectApplyPerson.setText(sb.toString());
+//                dialog.dismiss();
+//
+//            }
+//        });
+        return builder.create();
+    }
+
     private void initView(){
         et_selectStartTime.setText("");
         et_selectEndTime.setText("");
-        et_selectApplyPerson.setText("");
+        //et_selectApplyPerson.setText("");
+        et_selectApplyPerson.setText(MyApplication.getLoginBeen().getData().get(0).getName());
+        setApplicantid(MyApplication.getLoginBeen().getData().get(0).getPersionid());
         et_place.setText("");
         et_event.setText("");
-        et_real_apply_person.setText("");
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH-mm");
+        //et_real_apply_person.setText("");
+        et_real_apply_person.setText(MyApplication.getLoginBeen().getData().get(0).getName());
+        setPersionid(MyApplication.getLoginBeen().getData().get(0).getPersionid());
+        et_approveid.setText("");
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy年MM月dd日 HH时mm分");
         Date date = new Date(System.currentTimeMillis());
         et_now_time.setText(simpleDateFormat.format(date));
     }
