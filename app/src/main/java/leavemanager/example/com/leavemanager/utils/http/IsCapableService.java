@@ -22,9 +22,7 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 
 import leavemanager.example.com.leavemanager.Constants;
-import leavemanager.example.com.leavemanager.MyApplication;
 import leavemanager.example.com.leavemanager.been.IsCapableBeen;
-import leavemanager.example.com.leavemanager.been.LeavePermitBeen;
 
 public class IsCapableService {
     private static String url = Constants.serverURL+"/leaveinfo/getpersionleave";
@@ -56,6 +54,7 @@ public class IsCapableService {
         } catch (ExecutionException e) {
             e.printStackTrace();
         }
+        pool.shutdown();
         return true;
     }
     public static IsCapableBeen formatData(String msg) {
